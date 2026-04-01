@@ -10,7 +10,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // User clicks to select home location
-map.on('click', function(e) {
+map.on('click', function (e) {
     if (marker) map.removeLayer(marker);
     marker = L.marker(e.latlng).addTo(map);
     selectedLocation = e.latlng;
@@ -98,7 +98,7 @@ async function register() {
 
     const response = await fetch("http://127.0.0.1:8000/register", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
     });
 

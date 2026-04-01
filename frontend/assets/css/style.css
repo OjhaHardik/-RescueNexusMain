@@ -2,7 +2,7 @@
    THEME VARIABLES
 ================================ */
 :root {
-    --bg-main: #09090b;
+    --bg-main: #000022;
     --bg-sidebar: #18181b;
     --bg-card: #27272a;
 
@@ -130,7 +130,7 @@ button {
 }
 
 .btn-blue {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #001333, #2563eb);
     color: white;
     border: none;
     padding: 8px 16px;

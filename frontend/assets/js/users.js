@@ -22,7 +22,7 @@ function initMap() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    map.on('click', function(e) {
+    map.on('click', function (e) {
 
         if (marker) map.removeLayer(marker);
 
@@ -57,7 +57,7 @@ function detectLocation() {
         return;
     }
 
-    navigator.geolocation.getCurrentPosition(function(pos) {
+    navigator.geolocation.getCurrentPosition(function (pos) {
 
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
@@ -71,7 +71,7 @@ function detectLocation() {
 
         updateCoords();
 
-    }, function() {
+    }, function () {
         alert("Unable to fetch location");
     });
 }
@@ -168,54 +168,54 @@ function addUser() {
     }
 
     console.log("Sending:", {
-    name,
-    phone,
-    email,
-    password,
-    lat: selectedLocation?.lat,
-    lng: selectedLocation?.lng
+        name,
+        phone,
+        email,
+        password,
+        lat: selectedLocation?.lat,
+        lng: selectedLocation?.lng
     });
 
     const payload = {
-    name: name,
-    phone: phone,
-    email: email,
-    password: password,
-    home_latitude: Number(selectedLocation.lat),
-    home_longitude: Number(selectedLocation.lng)
-};
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+        home_latitude: Number(selectedLocation.lat),
+        home_longitude: Number(selectedLocation.lng)
+    };
 
-fetch("http://127.0.0.1:8000/register", {   // 👈 IMPORTANT CHANGE
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-})
-.then(async response => {
+    fetch("http://127.0.0.1:8000/register", {   // 👈 IMPORTANT CHANGE
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(async response => {
 
-    const data = await response.json();
+            const data = await response.json();
 
-    if (!response.ok) {
-        console.log("ERROR:", data);
-        alert(data.detail || "Something went wrong");
-        return;
-    }
+            if (!response.ok) {
+                console.log("ERROR:", data);
+                alert(data.detail || "Something went wrong");
+                return;
+            }
 
-    alert("User added successfully");
+            alert("User added successfully");
 
-    loadUsers();
+            loadUsers();
 
-    // reset
-    document.getElementById("userName").value = "";
-    document.getElementById("userPhone").value = "";
-    document.getElementById("userEmail").value = "";
-    document.getElementById("userPassword").value = "";
-    document.getElementById("selectedCoords").innerText = "No location selected";
+            // reset
+            document.getElementById("userName").value = "";
+            document.getElementById("userPhone").value = "";
+            document.getElementById("userEmail").value = "";
+            document.getElementById("userPassword").value = "";
+            document.getElementById("selectedCoords").innerText = "No location selected";
 
-    if (marker) map.removeLayer(marker);
-    selectedLocation = null;
-});
+            if (marker) map.removeLayer(marker);
+            selectedLocation = null;
+        });
 }
 
 
@@ -230,7 +230,7 @@ function deleteUser(id) {
     fetch(`http://127.0.0.1:8000/users/${id}`, {
         method: "DELETE"
     })
-    .then(() => loadUsers());
+        .then(() => loadUsers());
 }
 
 

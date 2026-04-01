@@ -95,7 +95,7 @@ function assignTeam(id) {
     fetch(`http://127.0.0.1:8000/incidents/${id}?status=In Progress&assigned_team=${team}`, {
         method: "PUT"
     })
-    .then(() => loadIncidents());  // Refresh list
+        .then(() => loadIncidents());  // Refresh list
 }
 
 
@@ -110,7 +110,7 @@ function resolveIncident(id) {
     fetch(`http://127.0.0.1:8000/incidents/${id}?status=Resolved&assigned_team=Completed`, {
         method: "PUT"
     })
-    .then(() => loadIncidents());  // Refresh list
+        .then(() => loadIncidents());  // Refresh list
 }
 
 
@@ -127,7 +127,7 @@ function deleteIncident(id) {
     fetch(`http://127.0.0.1:8000/incidents/${id}`, {
         method: "DELETE"
     })
-    .then(() => loadIncidents());  // Refresh list
+        .then(() => loadIncidents());  // Refresh list
 }
 
 

@@ -2,7 +2,7 @@
    LOAD INCIDENT LIST
 ========================================= */
 
-async function loadIncidentsList(){
+async function loadIncidentsList() {
 
     const res = await fetch("http://127.0.0.1:8000/incidents/");
     const data = await res.json();
@@ -26,7 +26,7 @@ async function loadIncidentsList(){
    SEND REAL BROADCAST
 ========================================= */
 
-async function sendBroadcast(){
+async function sendBroadcast() {
 
     const radius = document.getElementById("broadcastRadius").value;
 
@@ -35,23 +35,23 @@ async function sendBroadcast(){
 
     const method = document.getElementById("broadcastMethod").value;
 
-    if(!incidentId){
+    if (!incidentId) {
         alert("Select an incident first.");
         return;
     }
 
 
-const res = await fetch(
-    `http://127.0.0.1:8000/broadcast/${incidentId}?radius=${radius}&method=${method}`,
-    { method: "POST" }
-);
+    const res = await fetch(
+        `http://127.0.0.1:8000/broadcast/${incidentId}?radius=${radius}&method=${method}`,
+        { method: "POST" }
+    );
 
     const data = await res.json();
 
     logBroadcast(incidentId, method, data.alerts_sent);
 }
 
-function logBroadcast(incidentId, method, count){
+function logBroadcast(incidentId, method, count) {
 
     const logs = document.getElementById("broadcastLogs");
 

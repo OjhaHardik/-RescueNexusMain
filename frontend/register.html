@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Citizen Register</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
+
 <body>
 
 
-<h2>Register</h2>
+    <h2>Register</h2>
 
-<input type="text" id="name" placeholder="Full Name">
-<input type="text" id="phone" placeholder="Phone Number">
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="text" id="phone" placeholder="Phone Number">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
 
-<h3>Select Your Home Location</h3>
+    <h3>Select Your Home Location</h3>
 
-<input type="text" id="searchBox" placeholder="Search location..." style="width: 60%;">
-<button onclick="searchLocation()">Search</button>
-<button onclick="detectLocation()">Locate Me</button>
+    <input type="text" id="searchBox" placeholder="Search location..." style="width: 60%;">
+    <button onclick="searchLocation()">Search</button>
+    <button onclick="detectLocation()">Locate Me</button>
 
-<div id="map" style="height:300px;"></div>
+    <div id="map" style="height:300px;"></div>
 
-<button onclick="register()">Register</button>
+    <button onclick="register()">Register</button>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="assets/js/register.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="assets/js/register.js"></script>
 
 </body>
-</html>
 
+</html>
