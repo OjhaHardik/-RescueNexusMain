@@ -1,0 +1,46 @@
+<h2>User Management</h2>
+
+<div class="card">
+
+    <h3>Register New User</h3>
+
+    <div class="form-grid">
+        <input type="text" id="userName" placeholder="Full Name">
+        <input type="text" id="userPhone" placeholder="Phone Number">
+        <input type="email" id="userEmail" placeholder="Email Address">
+        <input type="password" id="userPassword" placeholder="Password">
+    </div>
+
+    <div class="location-bar">
+        <input type="text" id="locationSearch" placeholder="Search location (city, area)">
+        <button onclick="searchLocation()">Search</button>
+        <button onclick="detectLocation()">Use My Location</button>
+    </div>
+
+    <div id="userMap" style="height:300px; margin-top:15px; border-radius:10px;"></div>
+
+    <p id="selectedCoords" style="margin-top:10px; color:#aaa;">
+        No location selected
+    </p>
+
+    <button class="btn-blue" onclick="addUser()">Add User</button>
+
+</div>
+
+<div class="rn-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody"></tbody>
+    </table>
+</div>
+
+<script src="assets/js/users.js"></script>

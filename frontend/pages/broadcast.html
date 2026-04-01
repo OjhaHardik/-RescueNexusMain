@@ -1,0 +1,56 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Broadcast Center</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+<h2>Emergency Broadcast Center</h2>
+
+<div class="broadcast-panel">
+
+    <!-- INCIDENT SELECTION -->
+    <select id="broadcastIncident">
+        <option value="">Select Incident</option>
+    </select>
+
+    <!-- CONTROLS -->
+    <div class="broadcast-controls">
+
+        <label>Delivery Method:</label>
+        <select id="broadcastMethod">
+            <option value="all">All (SMS + Email)</option>
+            <option value="sms">SMS Only</option>
+            <option value="email">Email Only</option>
+        </select>
+
+        <input 
+            type="number" 
+            id="broadcastRadius" 
+            placeholder="Enter radius in km"
+            min="1"
+        >
+
+        <button class="btn-orange" onclick="sendBroadcast()">
+            Send Emergency Alert
+        </button>
+
+    </div>
+
+    <!-- LOGS -->
+    <div class="card">
+        <h3>Broadcast Logs</h3>
+        <div id="broadcastLogs" class="broadcast-logs"></div>
+    </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script src="assets/js/broadcast.js"></script>
+
+</body>
+</html>
+```

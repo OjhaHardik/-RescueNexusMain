@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RescueNexus - Citizen Portal</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+    <h2>Citizen Emergency Reporting</h2>
+
+    <!-- MAP -->
+    <div id="map"></div>
+
+    <!-- FORM -->
+    <div class="form-container">
+
+        <!-- CATEGORY -->
+        <label for="category">Select Category</label>
+        <select id="category" onchange="updateTypes()">
+            <option value="" disabled selected>Category of emergency</option>
+            <option value="Natural">Natural Disaster</option>
+            <option value="Accident">Accident & Transport</option>
+            <option value="Fire">Fire & Hazard</option>
+            <option value="Medical">Medical Emergency</option>
+            <option value="Crime">Crime & Safety</option>
+            <option value="Infrastructure">Infrastructure Issue</option>
+            <option value="Environment">Environmental / Animal</option>
+        </select>
+
+        <!-- TYPE -->
+        <label for="type">Select Incident Type</label>
+        <select id="type">
+            <option value="" disabled selected>Select incident type based on category</option>
+        </select>
+
+        <!-- IMAGE -->
+        <label for="image">Upload Image (optional)</label>
+        <input type="file" id="image" accept="image/*">
+
+        <!-- DESCRIPTION -->
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Describe the emergency"></textarea>
+
+        <!-- BUTTONS -->
+        <div class="button-group">
+            <button type="button" onclick="detectLocation()">Detect My Location</button>
+            <button type="button" onclick="submitIncident()">Submit Incident</button>
+        </div>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- SCRIPT -->
+    <script>
+
+        // CATEGORY → TYPES MAPPING
+        const typeOptions = {
+
+            Natural: [
+                "Flood", "Earthquake", "Cyclone", "Landslide",
+                "Heatwave", "Coldwave", "Drought", "Tsunami", "Lightning"
+            ],
+
+            Accident: [
+                "Road Accident", "Train Accident", "Airplane Accident",
+                "Boat Accident", "Vehicle Breakdown", "Traffic Jam"
+            ],
+
+            Fire: [
+                "Fire", "Forest Fire", "Building Fire",
+                "Explosion", "Gas Leak", "Chemical Leak"
+            ],
+
+            Medical: [
+                "Medical Emergency", "Heart Attack", "Stroke",
+                "Unconscious Person", "Severe Injury",
+                "Poisoning", "Disease Outbreak"
+            ],
+
+            Crime: [
+                "Theft", "Robbery", "Assault",
+                "Kidnapping", "Harassment",
+                "Suspicious Activity", "Terror Threat", "Riots"
+            ],
+
+            Infrastructure: [
+                "Power Outage", "Water Supply Issue",
+                "Sewage Problem", "Road Damage",
+                "Bridge Collapse", "Building Collapse",
+                "Internet Outage"
+            ],
+
+            Environment: [
+                "Animal Attack", "Stray Animal",
+                "Dead Animal", "Tree Fall", "Pollution"
+            ]
+        };
+
+        // UPDATE TYPE DROPDOWN
+        function updateTypes() {
+            const category = document.getElementById("category").value;
+            const typeSelect = document.getElementById("type");
+
+            typeSelect.innerHTML = '<option value="" disabled selected>-- Select Type --</option>';
+
+            if (typeOptions[category]) {
+                typeOptions[category].forEach(type => {
+                    const option = document.createElement("option");
+                    option.value = type;
+                    option.textContent = type;
+                    typeSelect.appendChild(option);
+                });
+            }
+        }
+
+    </script>
+
+    <!-- YOUR MAIN SCRIPT -->
+    <script src="script_citizen.js"></script>
+
+</body>
+</html>

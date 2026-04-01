@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Citizen Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<input type="text" id="phone" placeholder="Phone Number">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+<button onclick="window.location='register.html'">Register</button>
+
+<script>
+function login() {
+
+    fetch("http://127.0.0.1:8000/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            phone: document.getElementById("phone").value,
+            password: document.getElementById("password").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.user_id) {
+            localStorage.setItem("user_id", data.user_id);
+            localStorage.setItem("user_name", data.name);
+            window.location = "citizen.html";
+        } else {
+            alert("Login failed");
+        }
+    });
+}
+</script>
+
+</body>
+</html>

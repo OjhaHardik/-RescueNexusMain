@@ -1,0 +1,46 @@
+<!-- =========================================
+     KPI SECTION
+     -----------------------------------------
+     Displays real-time dashboard metrics
+     Values updated dynamically via JS
+========================================= -->
+
+<div class="kpi-container">
+
+    <!-- Total Incidents -->
+    <!-- Shows total number of incidents fetched -->
+    <div class="card">
+        <h3>Total Incidents</h3>
+        <span id="kpi-total">0</span>
+    </div>
+
+    <!-- Active Incidents -->
+    <!-- Incidents not marked as Resolved -->
+    <div class="card">
+        <h3>Active Incidents</h3>
+        <span id="kpi-active">0</span>
+    </div>
+
+    <!-- High Severity Incidents -->
+    <!-- Highlighted using danger-card styling -->
+    <div class="card danger-card">
+        <h3>High Severity</h3>
+        <span id="kpi-high">0</span>
+    </div>
+
+    <!-- Resolved Today -->
+    <!-- Counts incidents resolved on current date -->
+    <div class="card">
+        <h3>Resolved Today</h3>
+        <span id="kpi-resolved">0</span>
+    </div>
+
+</div>
+
+<!-- =========================================
+     MAP CONTAINER
+     -----------------------------------------
+     Leaflet map renders here
+     Initialized in dashboard.js
+========================================= -->
+<div id="map"></div>

@@ -1,0 +1,61 @@
+<!-- =========================================
+     ADMIN CONTROL CENTER - MAIN LAYOUT
+     -----------------------------------------
+     Base layout for admin panel
+     Loads sidebar, topbar, and pages dynamically
+========================================= -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Page Title -->
+    <title>RescueNexus Control Center</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Leaflet CSS (Used in Dashboard Map) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+
+    <!-- =========================================
+         APPLICATION LAYOUT
+         -----------------------------------------
+         Sidebar + Main Content Area
+    ========================================= -->
+    <div class="layout">
+
+        <!-- Sidebar will be loaded dynamically -->
+        <div id="sidebar"></div>
+
+        <!-- Main Content Section -->
+        <div class="main">
+
+            <!-- Topbar loaded dynamically -->
+            <div id="topbar"></div>
+
+            <!-- Page content injected here -->
+            <div id="content"></div>
+
+        </div>
+
+    </div>
+
+    <!-- Leaflet JS (Required for dashboard map) -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Core Application Logic -->
+    <!-- Handles page loading and layout initialization -->
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
