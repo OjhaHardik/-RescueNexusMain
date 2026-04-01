@@ -1,14 +1,29 @@
 <h2>System Settings</h2>
 
-<div class="card">
-    <label>Default Alert Radius (km)</label>
-    <input type="number" id="defaultRadius" value="5">
+<div class="card" style="max-width: 600px;">
+    <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--accent-orange);">Configuration Options</h3>
 
-    <label>Enable SMS Simulation</label>
-    <select id="smsMode">
-        <option value="on">ON</option>
-        <option value="off">OFF</option>
-    </select>
+    <div class="form-grid" style="grid-template-columns: 1fr; gap: 20px;">
+        
+        <!-- Setting Group 1 -->
+        <div>
+            <label style="display:block; margin-bottom:8px; font-weight: 500; font-size:14px; color: var(--text-main);">Default Alert Radius (km)</label>
+            <input type="number" id="defaultRadius" value="5">
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px; margin-bottom: 0;">Sets the default coverage area for new emergency broadcasts.</p>
+        </div>
 
-    <button class="btn-blue" onclick="saveSettings()">Save Settings</button>
+        <!-- Setting Group 2 -->
+        <div>
+            <label style="display:block; margin-bottom:8px; font-weight: 500; font-size:14px; color: var(--text-main);">Enable SMS Simulation</label>
+            <select id="smsMode">
+                <option value="on">ON - Simulate Responses</option>
+                <option value="off">OFF - Real Integration</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 30px; text-align: right;">
+        <button class="btn-navy" style="min-width: 120px;" onclick="saveSettings()">Save Settings</button>
+    </div>
 </div>

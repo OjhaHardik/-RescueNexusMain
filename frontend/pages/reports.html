@@ -1,19 +1,27 @@
 <h2>Post Incident Reports</h2>
 
-<div class="card">
-    <button class="btn-blue" onclick="exportCSV()">Export CSV</button>
-    <button class="btn-blue" onclick="exportPDF()">Export PDF</button>
+<div class="card" style="margin-bottom: 24px;">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">Generate Reports</h3>
+    <div style="display: flex; gap: 12px;">
+        <button class="btn-navy" onclick="exportCSV()">Export CSV</button>
+        <button class="btn-navy" onclick="exportPDF()">Export PDF</button>
+    </div>
 </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Team</th>
-            <th>Timestamp</th>
-        </tr>
-    </thead>
-    <tbody id="reportTableBody"></tbody>
-</table>
+<div class="card">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">Report History</h3>
+    <div class="rn-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Team</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="reportTableBody"></tbody>
+        </table>
+    </div>
+</div>

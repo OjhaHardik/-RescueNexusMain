@@ -22,6 +22,20 @@ function initMap() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
+    // Add robust search with autocomplete using Leaflet Geocoder
+    L.Control.geocoder({
+        defaultMarkGeocode: false
+    })
+    .on('markgeocode', function(e) {
+        const latlng = e.geocode.center;
+        map.setView(latlng, 15);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(latlng).addTo(map);
+        selectedLocation = latlng;
+        updateCoords();
+    })
+    .addTo(map);
+
     map.on('click', function (e) {
 
         if (marker) map.removeLayer(marker);
@@ -76,40 +90,6 @@ function detectLocation() {
     });
 }
 
-
-/* =========================================
-   SEARCH LOCATION
-========================================= */
-
-async function searchLocation() {
-
-    const query = document.getElementById("locationSearch").value;
-
-    if (!query) return;
-
-    const res = await fetch(
-        "https://nominatim.openstreetmap.org/search?format=json&q=" + query
-    );
-
-    const data = await res.json();
-
-    if (!data.length) {
-        alert("Location not found");
-        return;
-    }
-
-    const lat = parseFloat(data[0].lat);
-    const lng = parseFloat(data[0].lon);
-
-    map.setView([lat, lng], 15);
-
-    if (marker) map.removeLayer(marker);
-
-    marker = L.marker([lat, lng]).addTo(map);
-    selectedLocation = { lat: lat, lng: lng };
-
-    updateCoords();
-}
 
 
 /* =========================================

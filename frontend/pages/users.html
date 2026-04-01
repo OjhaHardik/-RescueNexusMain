@@ -1,8 +1,8 @@
 <h2>User Management</h2>
 
-<div class="card">
+<div class="card" style="margin-bottom: 24px;">
 
-    <h3>Register New User</h3>
+    <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-orange);">Register New User</h3>
 
     <div class="form-grid">
         <input type="text" id="userName" placeholder="Full Name">
@@ -11,36 +11,39 @@
         <input type="password" id="userPassword" placeholder="Password">
     </div>
 
-    <div class="location-bar">
-        <input type="text" id="locationSearch" placeholder="Search location (city, area)">
-        <button onclick="searchLocation()">Search</button>
-        <button onclick="detectLocation()">Use My Location</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+        <span style="color: var(--text-muted); font-size: 14px;">Select location using the map search or click "Use My Location".</span>
+        <button class="btn-orange" style="margin-bottom: 5px;" onclick="detectLocation()">Use My Location</button>
     </div>
 
-    <div id="userMap" style="height:300px; margin-top:15px; border-radius:10px;"></div>
+    <div id="userMap" style="height:350px; border: 1px solid #3f3f46; border-radius:12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);"></div>
 
-    <p id="selectedCoords" style="margin-top:10px; color:#aaa;">
-        No location selected
-    </p>
-
-    <button class="btn-blue" onclick="addUser()">Add User</button>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <p id="selectedCoords" style="color:#a1a1aa; font-weight: 500; margin: 0;">
+            No location selected
+        </p>
+        <button class="btn-blue" onclick="addUser()">Add User</button>
+    </div>
 
 </div>
 
-<div class="rn-table">
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="userTableBody"></tbody>
-    </table>
+<div class="card">
+    <h3 style="margin-top: 0; margin-bottom: 20px;">Active Users</h3>
+    <div class="rn-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+        </table>
+    </div>
 </div>
 
 <script src="assets/js/users.js"></script>
