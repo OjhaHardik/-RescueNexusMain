@@ -58,3 +58,29 @@ class User(Base):
 
     # Relationship
     incidents = relationship("Incident", back_populates="user")
+
+
+# =========================================
+# REPORT RECORD MODEL (PERMANENT LOG)
+# =========================================
+class ReportRecord(Base):
+    __tablename__ = "reports"
+
+    id = Column(Integer, primary_key=True, index=True)
+    original_incident_id = Column(Integer, index=True)
+
+    # Core Data
+    type = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    severity = Column(String, nullable=False)
+    
+    # State tracking at time of archiving / updating
+    status = Column(String, default="Pending")
+    assigned_team = Column(String, default="Not Assigned")
+    
+    # Metadata
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    image_path = Column(String, nullable=True)
+    user_id = Column(Integer, nullable=True)

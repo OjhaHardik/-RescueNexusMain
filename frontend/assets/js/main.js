@@ -7,7 +7,7 @@
 async function loadComponent(id, path) {
 
    // Fetch component file
-   const res = await fetch(path);
+   const res = await fetch(path + '?v=' + new Date().getTime());
    const html = await res.text();
 
    // Inject into target element
@@ -24,9 +24,14 @@ async function loadComponent(id, path) {
 async function loadPage(page) {
 
    /* -------------------------------
+      CLOSE MOBILE SIDEBAR (IF OPEN)
+   ------------------------------- */
+   document.body.classList.remove('sidebar-open');
+
+   /* -------------------------------
       LOAD PAGE HTML
    ------------------------------- */
-   const res = await fetch(`pages/${page}.html`);
+   const res = await fetch(`pages/${page}.html?v=` + new Date().getTime());
    const html = await res.text();
    document.getElementById("content").innerHTML = html;
 
@@ -44,7 +49,7 @@ async function loadPage(page) {
    if (existingScript) existingScript.remove();
 
    const script = document.createElement("script");
-   script.src = `assets/js/${page}.js`;
+   script.src = `assets/js/${page}.js?v=` + new Date().getTime();
    script.id = "pageScript";
 
    script.onload = () => {
@@ -55,6 +60,14 @@ async function loadPage(page) {
 
       if (page === "broadcast" && typeof loadIncidentsList === "function") {
          loadIncidentsList();
+      }
+
+      if (page === "reports" && typeof initReportsPage === "function") {
+         initReportsPage();
+      }
+
+      if (page === "analytics" && typeof loadAnalytics === "function") {
+         loadAnalytics();
       }
 
    };
@@ -73,6 +86,9 @@ async function loadPage(page) {
    ).find(btn => btn.textContent.toLowerCase() === page);
 
    if (activeBtn) activeBtn.classList.add("active");
+   
+   // Save active page state to localStorage
+   localStorage.setItem("activePage", page);
 }
 
 
@@ -87,5 +103,64 @@ window.onload = async function () {
    await loadComponent("sidebar", "components/sidebar.html");
    await loadComponent("topbar", "components/topbar.html");
 
-   loadPage("dashboard");
+   // Load Theme
+   if (localStorage.getItem('appTheme') === 'light') {
+       document.body.classList.add('light-mode');
+   }
+
+   const savedPage = localStorage.getItem("activePage") || "dashboard";
+   loadPage(savedPage);
+
+   // Start Polling
+   startGlobalPolling();
+};
+
+/* =========================================
+   GLOBAL POLLING & NOTIFICATIONS
+========================================= */
+let globalPollInterval = null;
+let lastIncidentCount = 0;
+
+window.startGlobalPolling = function() {
+   if (globalPollInterval) clearInterval(globalPollInterval);
+   
+   const refreshRate = parseInt(localStorage.getItem('appRefreshRate') || '0', 10);
+   
+   // Initial count fetch to set baseline for notifications
+   fetch("http://127.0.0.1:8000/incidents/")
+      .then(res => res.json())
+      .then(data => lastIncidentCount = data.length)
+      .catch(() => {});
+
+   if (refreshRate > 0) {
+      globalPollInterval = setInterval(async () => {
+         
+         // 1. Check for new incidents (Notifications)
+         try {
+            const res = await fetch("http://127.0.0.1:8000/incidents/");
+            const data = await res.json();
+            
+            if (data.length > lastIncidentCount) {
+               const diff = data.length - lastIncidentCount;
+               lastIncidentCount = data.length;
+               
+               if (localStorage.getItem('appNotifications') === 'on' && Notification.permission === 'granted') {
+                  new Notification("RescueNexus Alert", {
+                     body: `${diff} new incident(s) reported!`,
+                     icon: "/frontend/assets/images/alert-icon.png" // fallback ok if missing
+                  });
+               }
+            } else {
+               lastIncidentCount = data.length;
+            }
+         } catch(e) {}
+
+         // 2. Auto-refresh current page
+         const page = localStorage.getItem("activePage");
+         if (page === "dashboard" && typeof initDashboard === "function") initDashboard();
+         if (page === "incidents" && typeof loadIncidents === "function") loadIncidents();
+         if (page === "analytics" && typeof loadAnalytics === "function") loadAnalytics();
+         
+      }, refreshRate);
+   }
 };

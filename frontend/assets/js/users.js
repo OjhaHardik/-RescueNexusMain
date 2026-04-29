@@ -26,15 +26,15 @@ function initMap() {
     L.Control.geocoder({
         defaultMarkGeocode: false
     })
-    .on('markgeocode', function(e) {
-        const latlng = e.geocode.center;
-        map.setView(latlng, 15);
-        if (marker) map.removeLayer(marker);
-        marker = L.marker(latlng).addTo(map);
-        selectedLocation = latlng;
-        updateCoords();
-    })
-    .addTo(map);
+        .on('markgeocode', function (e) {
+            const latlng = e.geocode.center;
+            map.setView(latlng, 15);
+            if (marker) map.removeLayer(marker);
+            marker = L.marker(latlng).addTo(map);
+            selectedLocation = latlng;
+            updateCoords();
+        })
+        .addTo(map);
 
     map.on('click', function (e) {
 
@@ -107,12 +107,12 @@ function loadUsers() {
             data.forEach(user => {
                 table.innerHTML += `
                     <tr>
-                        <td>${user.name}</td>
-                        <td>${user.phone}</td>
-                        <td>${user.home_latitude || "-"}</td>
-                        <td>${user.home_longitude || "-"}</td>
-                        <td>Active</td>
-                        <td>
+                        <td data-label="Name">${user.name}</td>
+                        <td data-label="Phone">${user.phone}</td>
+                        <td data-label="Latitude">${user.home_latitude || "-"}</td>
+                        <td data-label="Longitude">${user.home_longitude || "-"}</td>
+                        <td data-label="Status"> Active </td>
+                        <td data-label="Action">
                             <button class="btn-danger"
                                 onclick="deleteUser(${user.id})">
                                 Remove

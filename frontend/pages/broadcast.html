@@ -1,8 +1,13 @@
+<link rel="stylesheet" 
+      href="https://unpkg.com/leaflet/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
+
 <div class="card" style="margin-bottom: 24px;">
     <h2 style="margin-top: 0; margin-bottom: 20px;">Emergency Broadcast Center</h2>
 
     <div class="broadcast-panel">
-        <label style="color: var(--text-muted); margin-bottom: 10px; display: block;">Select Incident to Setup Broadcast:</label>
+        <label style="display:block; margin-bottom:10px; color: var(--text-muted);">Select Incident to Setup Broadcast:</label>
         <select id="broadcastIncident" style="margin-bottom: 20px;">
             <option value="">Select Incident...</option>
         </select>
@@ -23,6 +28,14 @@
                 <input type="number" id="broadcastRadius" placeholder="e.g. 5" min="1">
             </div>
             
+            <div>
+                <!-- Manual map toggle -->
+                <label style="display:block; margin-bottom:8px; font-size:14px; color: var(--text-muted);">
+                    <input type="checkbox" id="useMap"> Select on Map
+                </label>
+                <div id="map" style="width: 100%; height: 300px; display: none; margin-top: 10px;"></div>
+            </div>
+
             <div style="display:flex; align-items:flex-end; height:100%;">
                 <button class="btn-orange btn-pulse" style="width: 100%; padding: 12px; margin-top: 24px;" onclick="sendBroadcast()">
                     ⚠️ Send Emergency Alert
@@ -40,4 +53,7 @@
     </div>
 </div>
 
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
 <script src="assets/js/broadcast.js"></script>

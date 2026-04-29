@@ -2,34 +2,82 @@
 <html>
 
 <head>
-    <title>Citizen Register</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Register - RescueNexus</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Leaflet & Geocoder -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 </head>
 
 <body>
 
+    <div class="auth-layout" style="padding-top:40px; padding-bottom: 40px; overflow-y: auto;">
+        
+        <div class="auth-glow-orange"></div>
+        <div class="auth-glow-blue"></div>
 
-    <h2>Register</h2>
+        <div class="auth-card" style="margin: auto; max-width: 500px; z-index: 10;">
+            <h1 class="logo">Rescue<span>Nexus</span></h1>
+            <p class="subtitle">Create your citizen account</p>
 
-    <input type="text" id="name" placeholder="Full Name">
-    <input type="text" id="phone" placeholder="Phone Number">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 0;">
+                <div class="auth-input-group" style="margin-bottom: 15px;">
+                    <label>Full Name</label>
+                    <div class="auth-input-inline">
+                        <input type="text" id="name" placeholder="John Doe">
+                    </div>
+                </div>
+                <div class="auth-input-group" style="margin-bottom: 15px;">
+                    <label>Phone Number</label>
+                    <div class="auth-input-inline">
+                        <input type="text" id="phone" placeholder="7252952519">
+                    </div>
+                </div>
+            </div>
 
-    <h3>Select Your Home Location</h3>
+            <div class="auth-input-group" style="margin-bottom: 15px;">
+                <label>Email Address</label>
+                <div class="auth-input-inline">
+                    <input type="email" id="email" placeholder="john@example.com">
+                </div>
+            </div>
 
-    <input type="text" id="searchBox" placeholder="Search location..." style="width: 60%;">
-    <button onclick="searchLocation()">Search</button>
-    <button onclick="detectLocation()">Locate Me</button>
+            <div class="auth-input-group" style="margin-bottom: 24px;">
+                <label>Password</label>
+                <div class="auth-input-inline">
+                    <input type="password" id="password" placeholder="••••••••">
+                </div>
+            </div>
 
-    <div id="map" style="height:300px;"></div>
+            <div class="auth-divider" style="margin: 15px 0;">Home Location</div>
 
-    <button onclick="register()">Register</button>
+            <!-- Header for map with location detect button -->
+            <div style="display:flex; justify-content: space-between; align-items:flex-end;">
+                <label style="font-size: 13px; color: #a1a1aa; font-weight: 500;">Pin Home Location</label>
+                <button class="auth-social-btn" style="width: auto; padding: 6px 14px; margin-bottom: 0; font-size: 12px;" onclick="detectLocation()">Use My Location</button>
+            </div>
+            
+            <!-- Map Container -->
+            <div id="map" style="height:250px; border-radius:12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; margin-bottom: 24px;"></div>
 
+            <button class="auth-submit-btn" onclick="register()">Create Account ➔</button>
+
+            <div class="auth-footer">
+                Already have an account? <a href="login.html">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="assets/js/register.js"></script>
 
 </body>
-
 </html>

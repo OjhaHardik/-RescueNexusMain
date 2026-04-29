@@ -4,12 +4,60 @@
 
     <div class="card">
         <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-orange);">Severity Distribution</h3>
-        <canvas id="severityChart" style="max-height: 300px; width: 100%;"></canvas>
+        <canvas id="severityChart" style="max-height: 250px; width: 100%;"></canvas>
     </div>
 
     <div class="card">
         <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-orange);">Status Distribution</h3>
-        <canvas id="statusChart" style="max-height: 300px; width: 100%;"></canvas>
+        <canvas id="statusChart" style="max-height: 250px; width: 100%;"></canvas>
+    </div>
+
+</div>
+
+<!-- Second row: Trends & Weather -->
+<div class="chart-grid" style="grid-template-columns: 2fr 1fr; margin-top: 24px;">
+
+    <div class="card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-orange);">Incidents vs Reports Over Time</h3>
+        <canvas id="trendsChart" style="max-height: 300px; width: 100%;"></canvas>
+    </div>
+
+    <!-- Weather Card with Glassmorphism -->
+    <div class="card"
+        style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--accent-blue);">Real-Time Location Weather</h3>
+        <p style="font-size: 14px; color: #a1a1aa; margin-bottom: 10px;">Select an active incident location to view its
+            current weather.</p>
+
+        <select id="weatherIncidentSelect" class="form-input"
+            style="margin-bottom: 20px; background-color: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 6px;">
+            <option value="">Loading locations...</option>
+        </select>
+
+        <div id="weatherDisplay"
+            style="display: none; text-align: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; margin-top: 10px;">
+            <h1 id="w_temp" style="font-size: 48px; margin: 0; color: #fff;">--°C</h1>
+            <p id="w_desc" style="font-size: 18px; color: #60a5fa; margin: 5px 0;">Loading...</p>
+            <div
+                style="display: flex; justify-content: space-around; margin-top: 15px; font-size: 14px; color: #d1d5db;">
+                <div>💨 <span id="w_wind">-- km/h</span></div>
+                <div>📍 <span id="w_coords">Lat, Lon</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Third row: Incident Types & Team Workload -->
+<div class="chart-grid" style="grid-template-columns: 1fr 1fr; margin-top: 24px;">
+
+    <div class="card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-orange);">Incident Type Breakdown</h3>
+        <canvas id="typeChart" style="max-height: 250px; width: 100%;"></canvas>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-orange);">Team Workload Distribution</h3>
+        <canvas id="teamChart" style="max-height: 250px; width: 100%;"></canvas>
     </div>
 
 </div>

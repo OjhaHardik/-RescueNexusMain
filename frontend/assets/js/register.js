@@ -4,10 +4,24 @@
 
 let map = L.map('map').setView([28.4744, 77.5040], 13); // Greater Noida
 let marker = null;
+let selectedLocation = null;
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
+
+// Add robust search with autocomplete using Leaflet Geocoder
+L.Control.geocoder({
+    defaultMarkGeocode: false
+})
+    .on('markgeocode', function (e) {
+        const latlng = e.geocode.center;
+        map.setView(latlng, 15);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(latlng).addTo(map);
+        selectedLocation = latlng;
+    })
+    .addTo(map);
 
 // User clicks to select home location
 map.on('click', function (e) {
@@ -44,33 +58,6 @@ function detectLocation() {
     );
 }
 
-/* =========================================
-   SEARCH FUNCTION
-========================================= */
-
-async function searchLocation() {
-    const query = document.getElementById("searchBox").value;
-
-    if (!query) return;
-
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
-    const data = await res.json();
-
-    if (data.length === 0) {
-        alert("Location not found");
-        return;
-    }
-
-    const lat = parseFloat(data[0].lat);
-    const lon = parseFloat(data[0].lon);
-
-    map.setView([lat, lon], 15);
-
-    if (marker) map.removeLayer(marker);
-    marker = L.marker([lat, lon]).addTo(map);
-
-    selectedLocation = { lat, lng: lon };
-}
 
 /* =========================================
    REGISTER FUNCTION

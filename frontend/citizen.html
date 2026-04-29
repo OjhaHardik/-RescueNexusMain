@@ -5,115 +5,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RescueNexus - Citizen Portal</title>
-
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=3">
+    <style>
+        .citizen-map-container {
+            height: 250px;
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        /* Better custom file upload */
+        .custom-file-upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(255, 106, 0, 0.5);
+            border-radius: 12px;
+            padding: 24px;
+            color: #a1a1aa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .custom-file-upload:hover {
+            border-color: #ff6a00;
+            color: #fff;
+            background: rgba(255, 106, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .custom-file-upload input[type="file"] {
+            display: none;
+        }
+
+        /* Force inputs to match glass aesthetics */
+        select.glass-select,
+        textarea.glass-textarea {
+            width: 100% !important;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            box-sizing: border-box !important;
+        }
+
+        select.glass-select:focus,
+        textarea.glass-textarea:focus {
+            border-color: #ff6a00;
+            box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.2);
+            outline: none;
+        }
+
+        select.glass-select option {
+            background: #1e293b;
+            color: white;
+        }
+    </style>
 </head>
 
-<body>
+<body style="overflow-y: auto !important; height: auto; min-height: 100vh;">
 
-    <h2>Citizen Emergency Reporting</h2>
+    <div class="auth-layout" style="padding: 20px 15px; overflow-y: auto; align-items: flex-start; min-height: 100vh;">
 
-    <!-- MAP -->
-    <div id="map"></div>
+        <!-- Glowing Ambient Orbs for Glassmorphism Background -->
+        <div class="auth-glow-orange"></div>
+        <div class="auth-glow-blue"></div>
 
-    <!-- FORM -->
-    <div class="form-container">
+        <div
+            style="width: 100%; max-width: 95%; margin: 0 auto; z-index: 10; display: flex; flex-direction: column;">
 
-        <!-- CATEGORY -->
-        <label for="category">Select Category</label>
-        <select id="category" onchange="updateTypes()">
-            <option value="" disabled selected>Category of emergency</option>
-            <option value="Natural">Natural Disaster</option>
-            <option value="Accident">Accident & Transport</option>
-            <option value="Fire">Fire & Hazard</option>
-            <option value="Medical">Medical Emergency</option>
-            <option value="Crime">Crime & Safety</option>
-            <option value="Infrastructure">Infrastructure Issue</option>
-            <option value="Environment">Environmental / Animal</option>
-        </select>
+            <!-- Navbar -->
+            <div class="top-header">
+                <h1 class="logo"
+                    style="font-size: 26px; margin:0; font-weight: 700; color: #ff6a00; letter-spacing: -0.5px;">
+                    Rescue<span style="color:#3b82f6;">Nexus</span></h1>
+                <button class="btn-danger" style="padding: 8px 16px; font-size:14px; border-radius: 12px;"
+                    onclick="logout()">Sign Out</button>
+            </div>
 
-        <!-- TYPE -->
-        <label for="type">Select Incident Type</label>
-        <select id="type">
-            <option value="" disabled selected>Select incident type based on category</option>
-        </select>
+            <!-- Glass Card Content -->
+            <div class="auth-card" style="max-width: 100%;">
 
-        <!-- IMAGE -->
-        <label for="image">Upload Image (optional)</label>
-        <input type="file" id="image" accept="image/*">
+                <h2 style="margin-top:0; margin-bottom: 24px; font-size: 20px; color: #fff; text-align: center;">Report
+                    an Emergency</h2>
 
-        <!-- DESCRIPTION -->
-        <label for="description">Description</label>
-        <textarea id="description" placeholder="Describe the emergency"></textarea>
+                <!-- MAP DIRECTLY IN THE CARD -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 13px; color: #a1a1aa; font-weight: 500;">📍 Accurate Location (Drag pin or
+                        Detect)</span>
+                    <button class="auth-social-btn" style="width: auto; padding: 6px 14px; font-size: 12px; margin: 0;"
+                        type="button" onclick="detectLocation()">Detect GPS</button>
+                </div>
 
-        <!-- BUTTONS -->
-        <div class="button-group">
-            <button type="button" onclick="detectLocation()">Detect My Location</button>
-            <button type="button" onclick="submitIncident()">Submit Incident</button>
+                <div id="map" class="citizen-map-container"></div>
+
+                <!-- THE FORM -->
+                <div class="form-grid" style="grid-template-columns: 1fr; gap: 20px; margin-bottom: 0;">
+
+                    <!-- CATEGORY -->
+                    <div class="auth-input-group" style="margin-bottom: 0;">
+                        <label>Category of Emergency</label>
+                        <select id="category" class="glass-select" onchange="updateTypes()">
+                            <option value="" disabled selected>-- Tap to Select Category --</option>
+                            <option value="Natural">Natural Disaster</option>
+                            <option value="Accident">Accident & Transport</option>
+                            <option value="Fire">Fire & Hazard</option>
+                            <option value="Medical">Medical Emergency</option>
+                            <option value="Crime">Crime & Safety</option>
+                            <option value="Infrastructure">Infrastructure Issue</option>
+                            <option value="Environment">Environmental / Animal</option>
+                        </select>
+                    </div>
+
+                    <!-- TYPE -->
+                    <div class="auth-input-group" style="margin-bottom: 0;">
+                        <label>Incident Type</label>
+                        <select id="type" class="glass-select">
+                            <option value="" disabled selected>-- Select Incident Type --</option>
+                        </select>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="auth-input-group" style="margin-bottom: 0;">
+                        <label>Describe the Emergency</label>
+                        <textarea id="description" class="glass-textarea"
+                            placeholder="Help responders by describing exactly what happened..." rows="4"
+                            style="display: block; width: 100% !important; box-sizing: border-box !important; resize: none;"></textarea>
+                    </div>
+
+                    <!-- IMAGE UPLOAD (The sleek custom button) -->
+                    <div class="auth-input-group" style="margin-bottom: 0;">
+                        <label>Upload Photo Evidence (Optional)</label>
+                        <label class="custom-file-upload">
+                            <input type="file" id="image" accept="image/*" onchange="updateFileName(this)">
+                            <span id="fileNameDisplay">📷 Tap here to upload an image from your device</span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- SUBMIT -->
+                <button class="auth-submit-btn"
+                    style="margin-top: 32px; padding: 16px; font-size: 16px; letter-spacing: 0.5px;" type="button"
+                    onclick="submitIncident()">⚠️ SUBMIT EMERGENCY NOW</button>
+
+            </div>
         </div>
-
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <!-- SCRIPT -->
     <script>
+        // Update file name display beautifully
+        function updateFileName(input) {
+            const display = document.getElementById("fileNameDisplay");
+            if (input.files && input.files.length > 0) {
+                display.innerHTML = `<span style="color:#fff;">✅ Uploaded: ${input.files[0].name}</span>`;
+                display.parentNode.style.borderColor = "#ff6a00";
+            } else {
+                display.innerHTML = "📷 Tap here to upload an image from your device";
+                display.parentNode.style.borderColor = "rgba(255, 106, 0, 0.5)";
+            }
+        }
 
         // CATEGORY → TYPES MAPPING
         const typeOptions = {
-
-            Natural: [
-                "Flood", "Earthquake", "Cyclone", "Landslide",
-                "Heatwave", "Coldwave", "Drought", "Tsunami", "Lightning"
-            ],
-
-            Accident: [
-                "Road Accident", "Train Accident", "Airplane Accident",
-                "Boat Accident", "Vehicle Breakdown", "Traffic Jam"
-            ],
-
-            Fire: [
-                "Fire", "Forest Fire", "Building Fire",
-                "Explosion", "Gas Leak", "Chemical Leak"
-            ],
-
-            Medical: [
-                "Medical Emergency", "Heart Attack", "Stroke",
-                "Unconscious Person", "Severe Injury",
-                "Poisoning", "Disease Outbreak"
-            ],
-
-            Crime: [
-                "Theft", "Robbery", "Assault",
-                "Kidnapping", "Harassment",
-                "Suspicious Activity", "Terror Threat", "Riots"
-            ],
-
-            Infrastructure: [
-                "Power Outage", "Water Supply Issue",
-                "Sewage Problem", "Road Damage",
-                "Bridge Collapse", "Building Collapse",
-                "Internet Outage"
-            ],
-
-            Environment: [
-                "Animal Attack", "Stray Animal",
-                "Dead Animal", "Tree Fall", "Pollution"
-            ]
+            Natural: ["Flood", "Earthquake", "Cyclone", "Landslide", "Heatwave", "Coldwave", "Drought", "Tsunami", "Lightning"],
+            Accident: ["Road Accident", "Train Accident", "Airplane Accident", "Boat Accident", "Vehicle Breakdown", "Traffic Jam"],
+            Fire: ["Fire", "Forest Fire", "Building Fire", "Explosion", "Gas Leak", "Chemical Leak"],
+            Medical: ["Medical Emergency", "Heart Attack", "Stroke", "Unconscious Person", "Severe Injury", "Poisoning", "Disease Outbreak"],
+            Crime: ["Theft", "Robbery", "Assault", "Kidnapping", "Harassment", "Suspicious Activity", "Terror Threat", "Riots"],
+            Infrastructure: ["Power Outage", "Water Supply Issue", "Sewage Problem", "Road Damage", "Bridge Collapse", "Building Collapse", "Internet Outage"],
+            Environment: ["Animal Attack", "Stray Animal", "Dead Animal", "Tree Fall", "Pollution"]
         };
 
         // UPDATE TYPE DROPDOWN
         function updateTypes() {
             const category = document.getElementById("category").value;
             const typeSelect = document.getElementById("type");
-
             typeSelect.innerHTML = '<option value="" disabled selected>-- Select Type --</option>';
-
             if (typeOptions[category]) {
                 typeOptions[category].forEach(type => {
                     const option = document.createElement("option");
@@ -124,11 +222,15 @@
             }
         }
 
+        // LOGOUT
+        function logout() {
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            window.location = "login.html";
+        }
     </script>
 
-    <!-- YOUR MAIN SCRIPT -->
     <script src="script_citizen.js"></script>
-
 </body>
 
 </html>

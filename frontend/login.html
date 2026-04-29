@@ -2,23 +2,52 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Login - RescueNexus</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <title>Citizen Login</title>
 </head>
 
 <body>
 
-    <h2>Login</h2>
+    <div class="auth-layout">
+        <!-- Glowing Orbs behind the Glass Card -->
+        <div class="auth-glow-orange"></div>
+        <div class="auth-glow-blue"></div>
 
-    <input type="text" id="phone" placeholder="Phone Number">
-    <input type="password" id="password" placeholder="Password">
+        <div class="auth-card">
+            <h1 class="logo">Rescue<span>Nexus</span></h1>
+            <p class="subtitle">Sign in to your account</p>
 
-    <button onclick="login()">Login</button>
-    <button onclick="window.location='register.html'">Register</button>
+            <div class="auth-input-group">
+                <label>Phone Number</label>
+                <div class="auth-input-inline">
+                    <input type="text" id="phone" placeholder="e.g. 9988776655">
+                </div>
+            </div>
+
+            <div class="auth-input-group">
+                <label>Password</label>
+                <div class="auth-input-inline">
+                    <input type="password" id="password" placeholder="••••••••">
+                    <button class="auth-inline-btn" onclick="login()">➔</button>
+                </div>
+            </div>
+
+
+
+            <div class="auth-footer">
+                Don't have an account? <a href="register.html">Sign up</a>
+            </div>
+        </div>
+    </div>
 
     <script>
         function login() {
-
             fetch("http://127.0.0.1:8000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -29,7 +58,6 @@
             })
                 .then(res => res.json())
                 .then(data => {
-
                     if (data.user_id) {
                         localStorage.setItem("user_id", data.user_id);
                         localStorage.setItem("user_name", data.name);
@@ -40,7 +68,6 @@
                 });
         }
     </script>
-
 </body>
 
 </html>

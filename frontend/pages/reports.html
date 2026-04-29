@@ -1,27 +1,42 @@
-<h2>Post Incident Reports</h2>
+<div class="glass-blob-container">
+    <!-- Abstract Deep Sea / Glowing Elements -->
+    <div class="blob-shape blob-primary"></div>
+    <div class="blob-shape blob-accent"></div>
+    <div class="glowing-ring ring-1"></div>
+    <div class="glowing-ring ring-2"></div>
 
-<div class="card" style="margin-bottom: 24px;">
-    <h3 style="margin-top: 0; margin-bottom: 20px;">Generate Reports</h3>
-    <div style="display: flex; gap: 12px;">
-        <button class="btn-navy" onclick="exportCSV()">Export CSV</button>
-        <button class="btn-navy" onclick="exportPDF()">Export PDF</button>
-    </div>
-</div>
+    <!-- Content Card Architecture -->
+    <div class="premium-glass-content">
+        <h2 style="color: #fff; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);">Permanent Ledger</h2>
 
-<div class="card">
-    <h3 style="margin-top: 0; margin-bottom: 20px;">Report History</h3>
-    <div class="rn-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Team</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody id="reportTableBody"></tbody>
-        </table>
+        <!-- Action Panel -->
+        <div class="premium-glass-card" style="margin-bottom: 24px;">
+            <h3 style="margin-top: 0; margin-bottom: 20px;">Generate Logs</h3>
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 16px;">Download hard-copies of the indestructible
+                backend incident ledger. Records cannot be tampered with.</p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="btn-navy" style="flex: 1;" onclick="exportCSV()">Export CSV</button>
+                <button class="btn-navy" style="flex: 1;" onclick="exportPDF()">Export PDF</button>
+            </div>
+        </div>
+
+        <!-- Ledger Table -->
+        <div class="premium-glass-card">
+            <h3 style="margin-top: 0; margin-bottom: 20px;">Ledger History</h3>
+            <div class="rn-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rep ID</th>
+                            <th>Emergency</th>
+                            <th>Status</th>
+                            <th>Team</th>
+                            <th>Logged</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

@@ -24,6 +24,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
+// Add robust search with autocomplete using Leaflet Geocoder
+L.Control.geocoder({
+    defaultMarkGeocode: false
+})
+.on('markgeocode', function(e) {
+    const latlng = e.geocode.center;
+    map.setView(latlng, 15);
+    if (marker) map.removeLayer(marker);
+    marker = L.marker(latlng).addTo(map);
+})
+.addTo(map);
+
 
 /* =========================================
    CLICK TO PLACE MARKER

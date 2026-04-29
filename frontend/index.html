@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Main Styles -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=3">
 
     <!-- Leaflet CSS (Used in Dashboard Map) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -34,8 +34,12 @@
     ========================================= -->
     <div class="layout">
 
+        <!-- Glowing Ambient Orbs for Glassmorphism Background -->
+        <div class="auth-glow-orange"></div>
+        <div class="auth-glow-blue"></div>
+
         <!-- Sidebar will be loaded dynamically -->
-        <div id="sidebar"></div>
+        <div id="sidebar" class="sidebar-wrapper"></div>
 
         <!-- Main Content Section -->
         <div class="main">
@@ -54,9 +58,16 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
+    <!-- PDF Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Core Application Logic -->
     <!-- Handles page loading and layout initialization -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=3"></script>
 
 </body>
 

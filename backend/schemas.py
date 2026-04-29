@@ -24,3 +24,20 @@ class IncidentResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ReportResponse(BaseModel):
+    id: int
+    original_incident_id: int | None = None
+    type: str
+    description: str
+    latitude: float
+    longitude: float
+    severity: str
+    status: str
+    timestamp: datetime
+    assigned_team: str
+    image_path: str | None = None
+
+    class Config:
+        from_attributes = True

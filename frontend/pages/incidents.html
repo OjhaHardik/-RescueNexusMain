@@ -1,3 +1,23 @@
 <h2>Incident Management</h2>
 
 <div id="incidentContainer" class="incident-container"></div>
+
+<!-- Location Map Modal -->
+<div id="locationModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+    <div class="modal-content" style="background-color: var(--card-bg); margin: 5% auto; padding: 20px; border: 1px solid var(--border-color); width: 80%; max-width: 800px; border-radius: 12px;">
+        <h3 style="margin-top: 0; color: var(--accent-orange);">Update Incident Location</h3>
+        <p style="color: #a1a1aa; font-size: 14px; margin-bottom: 15px;">Search or drag the marker to update the incident location.</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <input type="text" id="mapSearchInput" class="form-input" placeholder="Search location..." style="flex-grow: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
+            <button onclick="searchLocation()" class="btn-blue" style="padding: 10px 20px;">Search</button>
+        </div>
+
+        <div id="incidentMap" style="height: 400px; width: 100%; border-radius: 8px; margin-bottom: 15px;"></div>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn-danger" onclick="closeLocationModal()">Cancel</button>
+            <button class="btn-blue" style="background-color: #22c55e;" onclick="saveNewLocation()">Save Location</button>
+        </div>
+    </div>
+</div>

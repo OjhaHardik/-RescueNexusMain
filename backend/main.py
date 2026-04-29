@@ -12,6 +12,8 @@
 import math
 import os
 from typing import List
+from datetime import datetime
+from collections import defaultdict
 
 from PIL import Image
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile, Form
@@ -20,13 +22,14 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from backend.services.mail import send_email
-from backend.schemas import IncidentResponse
+from backend.schemas import IncidentResponse, ReportResponse
 from backend.users.routes import router as users_router
 from backend.auth.routes import router as auth_router
 from database.db import engine, SessionLocal, Base
-from database.models import Incident, User
+from database.models import Incident, User, ReportRecord
 
 from backend.services.sms import send_sms
+from backend.sms.routes import router as sms_router
 
 from pydantic import BaseModel
 
@@ -45,7 +48,7 @@ class BroadcastRequest(BaseModel):
 app = FastAPI()
 app.include_router(auth_router)
 app.include_router(users_router)
-
+app.include_router(sms_router, prefix="/sms", tags=["SMS"])
 
 # =========================================
 # CORS CONFIGURATION
@@ -169,6 +172,24 @@ def create_incident(
     db.commit()
     db.refresh(db_incident)
 
+    # -----------------------------------------
+    # DUAL-LOG TO PERMANENT REPORTS
+    # -----------------------------------------
+    db_report = ReportRecord(
+        original_incident_id=db_incident.id,
+        type=db_incident.type,
+        description=db_incident.description,
+        latitude=db_incident.latitude,
+        longitude=db_incident.longitude,
+        severity=db_incident.severity,
+        status=db_incident.status,
+        assigned_team=db_incident.assigned_team,
+        image_path=db_incident.image_path,
+        user_id=db_incident.user_id
+    )
+    db.add(db_report)
+    db.commit()
+
     return db_incident
 
 
@@ -202,6 +223,66 @@ def update_incident(
 
     db.commit()
     db.refresh(incident)
+
+    # -----------------------------------------
+    # SYNC TO PERMANENT REPORT RECORD
+    # -----------------------------------------
+    report = db.query(ReportRecord).filter(ReportRecord.original_incident_id == incident_id).first()
+    if report:
+        report.status = status
+        report.assigned_team = assigned_team
+        db.commit()
+
+    # -----------------------------------------
+    # AUTOMATED EMAIL NOTIFICATION TO REPORTER
+    # -----------------------------------------
+    if incident.user_id:
+        user = db.query(User).filter(User.id == incident.user_id).first()
+        if user and user.email:
+            try:
+                # Custom message based on status change
+                if status == "In Progress":
+                    msg = f"Hello {user.name},\n\nThe {assigned_team} has been dispatched to handle your reported emergency ({incident.type}). Help is on the way!"
+                    send_email(user.email, msg)
+                elif status == "Resolved":
+                    msg = f"Hello {user.name},\n\nYour reported emergency ({incident.type}) has been marked as Resolved by the response team. Thank you for using RescueNexus."
+                    send_email(user.email, msg)
+            except Exception as e:
+                print("Failed to send status update email:", e)
+
+    return incident
+
+
+# =========================================
+# UPDATE INCIDENT LOCATION
+# =========================================
+
+@app.put("/incidents/{incident_id}/location")
+def update_incident_location(
+    incident_id: int,
+    latitude: float,
+    longitude: float,
+    db: Session = Depends(get_db)
+):
+    incident = db.query(Incident).filter(Incident.id == incident_id).first()
+
+    if not incident:
+        raise HTTPException(status_code=404, detail="Incident not found")
+
+    incident.latitude = latitude
+    incident.longitude = longitude
+
+    db.commit()
+    db.refresh(incident)
+
+    # -----------------------------------------
+    # SYNC TO PERMANENT REPORT RECORD
+    # -----------------------------------------
+    report = db.query(ReportRecord).filter(ReportRecord.original_incident_id == incident_id).first()
+    if report:
+        report.latitude = latitude
+        report.longitude = longitude
+        db.commit()
 
     return incident
 
@@ -318,3 +399,39 @@ def broadcast_alert(
         "incident_id": incident.id,
         "alerts_sent": len(notified_users)
     }
+
+
+# =========================================
+# GET ALL PERMANENT REPORTS
+# =========================================
+
+@app.get("/reports/", response_model=List[ReportResponse])
+def get_reports(db: Session = Depends(get_db)):
+    return db.query(ReportRecord).all()
+
+
+# =========================================
+# GET ANALYTICS TRENDS
+# =========================================
+
+@app.get("/analytics/trends")
+def get_analytics_trends(db: Session = Depends(get_db)):
+    incidents = db.query(Incident).all()
+    reports = db.query(ReportRecord).all()
+
+    trends = defaultdict(lambda: {"incidents": 0, "reports": 0})
+
+    for inc in incidents:
+        if inc.timestamp:
+            date_str = inc.timestamp.strftime("%Y-%m-%d")
+            trends[date_str]["incidents"] += 1
+
+    for rep in reports:
+        if rep.timestamp:
+            date_str = rep.timestamp.strftime("%Y-%m-%d")
+            trends[date_str]["reports"] += 1
+
+    # Sort by date
+    sorted_trends = {k: trends[k] for k in sorted(trends.keys())}
+    
+    return sorted_trends

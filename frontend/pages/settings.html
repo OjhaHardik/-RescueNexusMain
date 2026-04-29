@@ -6,18 +6,40 @@
     <div class="form-grid" style="grid-template-columns: 1fr; gap: 20px;">
         
         <!-- Setting Group 1 -->
-        <div>
-            <label style="display:block; margin-bottom:8px; font-weight: 500; font-size:14px; color: var(--text-main);">Default Alert Radius (km)</label>
-            <input type="number" id="defaultRadius" value="5">
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px; margin-bottom: 0;">Sets the default coverage area for new emergency broadcasts.</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+            <div>
+                <label style="display:block; margin-bottom:4px; font-weight: 500; font-size:16px; color: var(--text-main);">Dark Theme</label>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Toggle between dark and light mode interface.</p>
+            </div>
+            <select id="themeSelect" style="padding: 8px; border-radius: 6px; background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.2);">
+                <option value="dark">Dark Mode</option>
+                <option value="light">Light Mode</option>
+            </select>
         </div>
 
         <!-- Setting Group 2 -->
-        <div>
-            <label style="display:block; margin-bottom:8px; font-weight: 500; font-size:14px; color: var(--text-main);">Enable SMS Simulation</label>
-            <select id="smsMode">
-                <option value="on">ON - Simulate Responses</option>
-                <option value="off">OFF - Real Integration</option>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+            <div>
+                <label style="display:block; margin-bottom:4px; font-weight: 500; font-size:16px; color: var(--text-main);">Desktop Notifications</label>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Receive browser alerts for new incidents.</p>
+            </div>
+            <select id="notificationSelect" style="padding: 8px; border-radius: 6px; background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.2);">
+                <option value="off">Disabled</option>
+                <option value="on">Enabled</option>
+            </select>
+        </div>
+
+        <!-- Setting Group 3 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+            <div>
+                <label style="display:block; margin-bottom:4px; font-weight: 500; font-size:16px; color: var(--text-main);">Auto-Refresh Rate</label>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">How frequently the dashboard and incidents data updates.</p>
+            </div>
+            <select id="refreshSelect" style="padding: 8px; border-radius: 6px; background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.2);">
+                <option value="30000">30 Seconds</option>
+                <option value="60000">1 Minute</option>
+                <option value="300000">5 Minutes</option>
+                <option value="0">Manual</option>
             </select>
         </div>
 
