@@ -21,6 +21,11 @@ async function loadComponent(id, path) {
    Loads page HTML + JS dynamically
    Updates title and sidebar state
 ========================================= */
+window.switchPage = function(page) {
+   localStorage.setItem("activePage", page);
+   window.location.reload();
+};
+
 async function loadPage(page) {
 
    /* -------------------------------
