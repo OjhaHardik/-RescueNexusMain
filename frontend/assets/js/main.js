@@ -1,4 +1,4 @@
-window.API_BASE_URL = "https://d2m9nhvzdufzbv.cloudfront.net";
+window.API_BASE_URL = "https://d2m9nhvzdufzbv.cloudfront.net/api";
 
 /* =========================================
    LOAD COMPONENT
