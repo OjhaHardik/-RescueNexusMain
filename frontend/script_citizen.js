@@ -110,7 +110,7 @@ function submitIncident() {
         formData.append("image", imageFile);
     }
 
-    fetch("http://127.0.0.1:8000/incidents/", {
+    fetch("https://api.yourdomain.com/incidents/", {
         method: "POST",
         body: formData
     })

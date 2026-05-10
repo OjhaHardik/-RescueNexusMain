@@ -7,7 +7,7 @@ let reportsData = [];
    LOAD PERMANENT REPORTS FROM API
 ========================================= */
 function loadReports() {
-    fetch("http://127.0.0.1:8000/reports/")
+    fetch(window.API_BASE_URL + "/reports/")
         .then(res => res.json())
         .then(data => {
             reportsData = data;

@@ -11,7 +11,7 @@
 
 function loadAnalytics() {
     // 1. Fetch Incidents
-    fetch("http://127.0.0.1:8000/incidents/")
+    fetch(window.API_BASE_URL + "/incidents/")
         .then(res => res.json())
         .then(data => {
             const severityCount = {};
@@ -144,7 +144,7 @@ function loadAnalytics() {
         });
 
     // 2. Fetch Trends Data
-    fetch("http://127.0.0.1:8000/analytics/trends")
+    fetch(window.API_BASE_URL + "/analytics/trends")
         .then(res => res.json())
         .then(data => {
             const dates = Object.keys(data);

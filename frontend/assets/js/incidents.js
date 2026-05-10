@@ -7,7 +7,7 @@
 
 function loadIncidents() {
 
-    fetch("http://127.0.0.1:8000/incidents/")
+    fetch(window.API_BASE_URL + "/incidents/")
         .then(res => res.json())
         .then(data => {
 
@@ -30,7 +30,7 @@ function loadIncidents() {
                    Show image if available
                 ------------------------------- */
                 const imageHTML = incident.image_path
-                    ? `<img src="http://127.0.0.1:8000${incident.image_path}" class="incident-image">`
+                    ? `<img src="${window.API_BASE_URL}${incident.image_path}" class="incident-image">`
                     : `<div class="no-image">No Image</div>`;
 
                 /* -------------------------------
@@ -100,7 +100,7 @@ function assignTeam(id) {
     const team = prompt("Enter Team Name to Dispatch (An email alert will be sent to the reporting citizen):");
     if (!team) return;   // Stop if empty input
 
-    fetch(`http://127.0.0.1:8000/incidents/${id}?status=In Progress&assigned_team=${team}`, {
+    fetch(`${window.API_BASE_URL}/incidents/${id}?status=In Progress&assigned_team=${team}`, {
         method: "PUT"
     })
         .then(() => loadIncidents());  // Refresh list
@@ -115,7 +115,7 @@ function assignTeam(id) {
 
 function resolveIncident(id) {
 
-    fetch(`http://127.0.0.1:8000/incidents/${id}?status=Resolved&assigned_team=Completed`, {
+    fetch(`${window.API_BASE_URL}/incidents/${id}?status=Resolved&assigned_team=Completed`, {
         method: "PUT"
     })
         .then(() => loadIncidents());  // Refresh list
@@ -132,7 +132,7 @@ function deleteIncident(id) {
 
     if (!confirm("Delete this resolved incident?")) return;
 
-    fetch(`http://127.0.0.1:8000/incidents/${id}`, {
+    fetch(`${window.API_BASE_URL}/incidents/${id}`, {
         method: "DELETE"
     })
         .then(() => loadIncidents());  // Refresh list
@@ -200,7 +200,7 @@ function saveNewLocation() {
     
     const pos = locationMarker.getLatLng();
     
-    fetch(`http://127.0.0.1:8000/incidents/${currentIncidentId}/location?latitude=${pos.lat}&longitude=${pos.lng}`, {
+    fetch(`${window.API_BASE_URL}/incidents/${currentIncidentId}/location?latitude=${pos.lat}&longitude=${pos.lng}`, {
         method: "PUT"
     })
     .then(res => res.json())

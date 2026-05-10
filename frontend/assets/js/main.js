@@ -1,3 +1,5 @@
+window.API_BASE_URL = "http://43.205.87.49/api";
+
 /* =========================================
    LOAD COMPONENT
    -----------------------------------------
@@ -21,7 +23,7 @@ async function loadComponent(id, path) {
    Loads page HTML + JS dynamically
    Updates title and sidebar state
 ========================================= */
-window.switchPage = function(page) {
+window.switchPage = function (page) {
    localStorage.setItem("activePage", page);
    window.location.reload();
 };
@@ -91,7 +93,7 @@ async function loadPage(page) {
    ).find(btn => btn.textContent.toLowerCase() === page);
 
    if (activeBtn) activeBtn.classList.add("active");
-   
+
    // Save active page state to localStorage
    localStorage.setItem("activePage", page);
 }
@@ -110,7 +112,7 @@ window.onload = async function () {
 
    // Load Theme
    if (localStorage.getItem('appTheme') === 'light') {
-       document.body.classList.add('light-mode');
+      document.body.classList.add('light-mode');
    }
 
    const savedPage = localStorage.getItem("activePage") || "dashboard";
@@ -126,46 +128,46 @@ window.onload = async function () {
 let globalPollInterval = null;
 let lastIncidentCount = 0;
 
-window.startGlobalPolling = function() {
+window.startGlobalPolling = function () {
    if (globalPollInterval) clearInterval(globalPollInterval);
-   
+
    const refreshRate = parseInt(localStorage.getItem('appRefreshRate') || '0', 10);
-   
+
    // Initial count fetch to set baseline for notifications
-   fetch("http://127.0.0.1:8000/incidents/")
+   fetch(window.API_BASE_URL + "/incidents/")
       .then(res => res.json())
       .then(data => lastIncidentCount = data.length)
-      .catch(() => {});
+      .catch(() => { });
 
    if (refreshRate > 0) {
       globalPollInterval = setInterval(async () => {
-         
+
          // 1. Check for new incidents (Notifications)
          try {
-            const res = await fetch("http://127.0.0.1:8000/incidents/");
+            const res = await fetch(window.API_BASE_URL + "/incidents/");
             const data = await res.json();
-            
+
             if (data.length > lastIncidentCount) {
                const diff = data.length - lastIncidentCount;
                lastIncidentCount = data.length;
-               
+
                if (localStorage.getItem('appNotifications') === 'on' && Notification.permission === 'granted') {
                   new Notification("RescueNexus Alert", {
                      body: `${diff} new incident(s) reported!`,
-                     icon: "/frontend/assets/images/alert-icon.png" // fallback ok if missing
+                     icon: "/assets/images/alert-icon.png" // fallback ok if missing
                   });
                }
             } else {
                lastIncidentCount = data.length;
             }
-         } catch(e) {}
+         } catch (e) { }
 
          // 2. Auto-refresh current page
          const page = localStorage.getItem("activePage");
          if (page === "dashboard" && typeof initDashboard === "function") initDashboard();
          if (page === "incidents" && typeof loadIncidents === "function") loadIncidents();
          if (page === "analytics" && typeof loadAnalytics === "function") loadAnalytics();
-         
+
       }, refreshRate);
    }
 };

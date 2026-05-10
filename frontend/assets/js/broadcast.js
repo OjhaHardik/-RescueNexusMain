@@ -6,7 +6,7 @@ let selectedLat = null, selectedLng = null;
 let map, marker;
 
 async function loadIncidentsList() {
-    const res = await fetch("http://127.0.0.1:8000/incidents/");
+    const res = await fetch(window.API_BASE_URL + "/incidents/");
     const data = await res.json();
 
     const select = document.getElementById("broadcastIncident");
@@ -70,7 +70,7 @@ async function sendBroadcast() {
         }
     }
     // Prepare API URL with coords as query params
-    let url = `http://127.0.0.1:8000/broadcast/${incidentId}?radius=${radius}&method=${method}`;
+    let url = `${window.API_BASE_URL}/broadcast/${incidentId}?radius=${radius}&method=${method}`;
     if (lat && lng && (lat !== 0 || lng !== 0)) {
         url += `&latitude=${lat}&longitude=${lng}`;
     }

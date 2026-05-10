@@ -97,7 +97,7 @@ function detectLocation() {
 ========================================= */
 
 function loadUsers() {
-    fetch("http://127.0.0.1:8000/users/")
+    fetch(window.API_BASE_URL + "/users/")
         .then(res => res.json())
         .then(data => {
 
@@ -165,7 +165,7 @@ function addUser() {
         home_longitude: Number(selectedLocation.lng)
     };
 
-    fetch("http://127.0.0.1:8000/register", {   // 👈 IMPORTANT CHANGE
+    fetch(window.API_BASE_URL + "/register", {   // 👈 IMPORTANT CHANGE
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -207,7 +207,7 @@ function deleteUser(id) {
 
     if (!confirm("Delete this user?")) return;
 
-    fetch(`http://127.0.0.1:8000/users/${id}`, {
+    fetch(`${window.API_BASE_URL}/users/${id}`, {
         method: "DELETE"
     })
         .then(() => loadUsers());

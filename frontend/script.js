@@ -6,7 +6,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Load existing incidents
-fetch("http://127.0.0.1:8000/incidents/")
+fetch("https://api.yourdomain.com/incidents/")
     .then(response => response.json())
     .then(data => {
         data.forEach(incident => {
@@ -63,7 +63,7 @@ function submitIncident() {
         severity: "Medium"
     };
 
-    fetch("http://127.0.0.1:8000/incidents/", {
+    fetch("https://api.yourdomain.com/incidents/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

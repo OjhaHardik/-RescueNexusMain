@@ -1,13 +1,12 @@
-<link rel="stylesheet" 
-      href="https://unpkg.com/leaflet/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
 <div class="card" style="margin-bottom: 24px;">
     <h2 style="margin-top: 0; margin-bottom: 20px;">Emergency Broadcast Center</h2>
 
     <div class="broadcast-panel">
-        <label style="display:block; margin-bottom:10px; color: var(--text-muted);">Select Incident to Setup Broadcast:</label>
+        <label style="display:block; margin-bottom:10px; color: var(--text-muted);">Select Incident to Setup
+            Broadcast:</label>
         <select id="broadcastIncident" style="margin-bottom: 20px;">
             <option value="">Select Incident...</option>
         </select>
@@ -15,19 +14,21 @@
         <!-- CONTROLS -->
         <div class="form-grid" style="align-items: center;">
             <div>
-                <label style="display:block; margin-bottom:8px; font-size:14px; color: var(--text-muted);">Delivery Method:</label>
+                <label style="display:block; margin-bottom:8px; font-size:14px; color: var(--text-muted);">Delivery
+                    Method:</label>
                 <select id="broadcastMethod">
                     <option value="all">All (SMS + Email)</option>
                     <option value="sms">SMS Only</option>
                     <option value="email">Email Only</option>
                 </select>
             </div>
-            
+
             <div>
-                <label style="display:block; margin-bottom:8px; font-size:14px; color: var(--text-muted);">Broadcast Radius (km):</label>
+                <label style="display:block; margin-bottom:8px; font-size:14px; color: var(--text-muted);">Broadcast
+                    Radius (km):</label>
                 <input type="number" id="broadcastRadius" placeholder="e.g. 5" min="1">
             </div>
-            
+
             <div>
                 <!-- Manual map toggle -->
                 <label style="display:block; margin-bottom:8px; font-size:14px; color: var(--text-muted);">
@@ -37,7 +38,8 @@
             </div>
 
             <div style="display:flex; align-items:flex-end; height:100%;">
-                <button class="btn-orange btn-pulse" style="width: 100%; padding: 12px; margin-top: 24px;" onclick="sendBroadcast()">
+                <button class="btn-orange btn-pulse" style="width: 100%; padding: 12px; margin-top: 24px;"
+                    onclick="sendBroadcast()">
                     ⚠️ Send Emergency Alert
                 </button>
             </div>
@@ -53,7 +55,6 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
 <script src="assets/js/broadcast.js"></script>
