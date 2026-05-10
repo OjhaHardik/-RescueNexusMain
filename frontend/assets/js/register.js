@@ -83,7 +83,7 @@ async function register() {
         return;
     }
 
-    const response = await fetch("https://d2m9nhvzdufzbv.cloudfront.net/api/register", {
+    const response = await fetch("http://43.205.87.49:8000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

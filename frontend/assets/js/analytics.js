@@ -28,10 +28,10 @@ function loadAnalytics() {
                 const sev = i.severity.charAt(0).toUpperCase() + i.severity.slice(1).toLowerCase();
                 severityCount[sev] = (severityCount[sev] || 0) + 1;
                 statusCount[i.status] = (statusCount[i.status] || 0) + 1;
-                
+
                 const incType = i.type || "Other";
                 typeCount[incType] = (typeCount[incType] || 0) + 1;
-                
+
                 if (i.assigned_team && i.assigned_team !== "Not Assigned") {
                     teamCount[i.assigned_team] = (teamCount[i.assigned_team] || 0) + 1;
                 }
@@ -51,7 +51,7 @@ function loadAnalytics() {
                     datasets: [{
                         label: 'Cases',
                         data: Object.values(severityCount),
-                        backgroundColor: function(context) {
+                        backgroundColor: function (context) {
                             const index = context.dataIndex;
                             const label = context.chart.data.labels[index] || '';
                             if (label === 'Critical') return '#991b1b';

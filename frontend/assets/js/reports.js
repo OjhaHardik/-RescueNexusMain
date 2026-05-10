@@ -12,9 +12,9 @@ function loadReports() {
         .then(data => {
             reportsData = data;
             const table = document.getElementById("reportTableBody");
-            
+
             if (!table) return;
-            
+
             table.innerHTML = "";
 
             if (data.length === 0) {
@@ -22,8 +22,8 @@ function loadReports() {
                 return;
             }
 
-            data.sort((a,b) => b.id - a.id).forEach(report => {
-                
+            data.sort((a, b) => b.id - a.id).forEach(report => {
+
                 // Format Status
                 let statusBadge = "";
                 if (report.status === "Pending") statusBadge = `<span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">Pending</span>`;
@@ -38,7 +38,7 @@ function loadReports() {
 
                 // Format Time
                 const d = new Date(report.timestamp);
-                const timeStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const timeStr = d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                 table.innerHTML += `
                     <tr>
@@ -68,7 +68,7 @@ function exportCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
     csvContent += "Report ID,Original ID,Type,Severity,Status,Team,Latitude,Longitude,Timestamp\n";
 
-    reportsData.forEach(function(rowArray) {
+    reportsData.forEach(function (rowArray) {
         const row = [
             rowArray.id,
             rowArray.original_incident_id || "N/A",
@@ -100,7 +100,7 @@ function exportPDF() {
         alert("No reports to export.");
         return;
     }
-    
+
     try {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -113,7 +113,7 @@ function exportPDF() {
         doc.setFontSize(12);
         doc.setTextColor(100);
         doc.text("Official Emergency History Ledger", 14, 30);
-        
+
         doc.setFontSize(10);
         doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 38);
 
@@ -146,7 +146,7 @@ function exportPDF() {
         });
 
         doc.save(`RescueNexus_Reports_${new Date().getTime()}.pdf`);
-    } catch(err) {
+    } catch (err) {
         console.error(err);
         alert("PDF Generator Error. Ensure you refreshed the page so jsPDF loads.");
     }

@@ -110,7 +110,7 @@ function submitIncident() {
         formData.append("image", imageFile);
     }
 
-    fetch("https://d2m9nhvzdufzbv.cloudfront.net/api/incidents/", {
+    fetch("http://43.205.87.49:8000/incidents/", {
         method: "POST",
         body: formData
     })
