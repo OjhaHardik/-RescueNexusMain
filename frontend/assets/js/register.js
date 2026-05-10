@@ -83,7 +83,7 @@ async function register() {
         return;
     }
 
-    const response = await fetch("https://api.yourdomain.com/register", {
+    const response = await fetch("https://d2m9nhvzdufzbv.cloudfront.net/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

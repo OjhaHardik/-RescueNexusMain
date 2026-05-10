@@ -6,7 +6,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Load existing incidents
-fetch("https://api.yourdomain.com/incidents/")
+fetch("https://d2m9nhvzdufzbv.cloudfront.net/incidents/")
     .then(response => response.json())
     .then(data => {
         data.forEach(incident => {
@@ -63,7 +63,7 @@ function submitIncident() {
         severity: "Medium"
     };
 
-    fetch("https://api.yourdomain.com/incidents/", {
+    fetch("https://d2m9nhvzdufzbv.cloudfront.net/incidents/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
