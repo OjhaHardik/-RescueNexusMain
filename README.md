@@ -1,4 +1,4 @@
-# RescueNexus – Smart Emergency Response System
+# RescueNexus – Smart Emergency Response System.
 
 ## Overview
 RescueNexus is an intelligent emergency response platform designed to streamline incident reporting, monitoring, and response management. It enables users to report emergencies in real-time and allows authorities to track, analyze, and respond efficiently.
