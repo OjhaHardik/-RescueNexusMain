@@ -1,11 +1,11 @@
-# 🚑 RescueNexus – Smart Emergency Response System
+# RescueNexus – Smart Emergency Response System
 
-## 📌 Overview
+## Overview
 RescueNexus is an intelligent emergency response platform designed to streamline incident reporting, monitoring, and response management. It enables users to report emergencies in real-time and allows authorities to track, analyze, and respond efficiently.
 
 ---
 
-## 🎯 Objectives
+## Objectives
 - Provide a fast and reliable emergency reporting system
 - Enable real-time tracking of incidents
 - Improve coordination between users and authorities
@@ -13,9 +13,9 @@ RescueNexus is an intelligent emergency response platform designed to streamline
 
 ---
 
-## 🧠 Key Features
+## Key Features
 
-### 🚨 Incident Reporting
+### Incident Reporting
 - Users can report emergencies with:
   - Type (fire, accident, medical, etc.)
   - Description
@@ -23,28 +23,28 @@ RescueNexus is an intelligent emergency response platform designed to streamline
   - Optional image upload
 - Automatic severity classification (High / Medium / Low)
 
-### 📊 Dashboard
+### Dashboard
 - Total incidents count
 - High severity alerts
 - Resolved cases
 - Map-based visualization
 
-### 👤 User Management
+### User Management
 - User registration and login
 - Role-based access (citizen/admin)
 
-### 📡 Notifications
+### Notifications
 - Email alerts
 - SMS notifications for critical updates
 
-### 📈 Analytics
+### Analytics
 - Incident trends
 - Historical data tracking
 - Report generation
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Layer       | Technology Used |
 |------------|----------------|
