@@ -9,6 +9,16 @@
    4. Weather (API)
 ========================================= */
 
+// Create a chart, replacing any existing chart on the same canvas
+// (auto-refresh calls loadAnalytics() repeatedly)
+function renderChart(canvasId, config) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
+    return new Chart(canvas, config);
+}
+
 function loadAnalytics() {
     // 1. Fetch Incidents
     fetch(window.API_BASE_URL + "/incidents/")
@@ -44,7 +54,7 @@ function loadAnalytics() {
             });
 
             // Severity Chart (Bar)
-            new Chart(document.getElementById("severityChart"), {
+            renderChart("severityChart", {
                 type: "bar",
                 data: {
                     labels: Object.keys(severityCount),
@@ -72,7 +82,7 @@ function loadAnalytics() {
             });
 
             // Status Chart (Pie)
-            new Chart(document.getElementById("statusChart"), {
+            renderChart("statusChart", {
                 type: "pie",
                 data: {
                     labels: Object.keys(statusCount),
@@ -89,7 +99,7 @@ function loadAnalytics() {
             });
 
             // Incident Type Chart (Doughnut)
-            new Chart(document.getElementById("typeChart"), {
+            renderChart("typeChart", {
                 type: "doughnut",
                 data: {
                     labels: Object.keys(typeCount),
@@ -106,7 +116,7 @@ function loadAnalytics() {
             });
 
             // Team Workload Chart (Bar)
-            new Chart(document.getElementById("teamChart"), {
+            renderChart("teamChart", {
                 type: "bar",
                 data: {
                     labels: Object.keys(teamCount),
@@ -127,14 +137,14 @@ function loadAnalytics() {
             });
 
             // Handle weather selection
-            weatherSelect.addEventListener('change', function (e) {
+            weatherSelect.onchange = function (e) {
                 if (!e.target.value) {
                     document.getElementById('weatherDisplay').style.display = 'none';
                     return;
                 }
                 const coords = e.target.value.split(',');
                 fetchWeather(coords[0], coords[1]);
-            });
+            };
 
             // Auto load first location weather if available
             if (data.length > 0) {
@@ -151,7 +161,7 @@ function loadAnalytics() {
             const incidentsData = dates.map(d => data[d].incidents);
             const reportsData = dates.map(d => data[d].reports);
 
-            new Chart(document.getElementById("trendsChart"), {
+            renderChart("trendsChart", {
                 type: "line",
                 data: {
                     labels: dates,
@@ -192,7 +202,7 @@ function fetchWeather(lat, lon) {
     document.getElementById("w_desc").textContent = "Loading...";
 
     // Call completely free Open-Meteo API
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    const url = `${window.APP_CONFIG.WEATHER_API_URL}?latitude=${lat}&longitude=${lon}&current_weather=true`;
 
     fetch(url)
         .then(res => res.json())

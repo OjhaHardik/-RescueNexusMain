@@ -4,25 +4,29 @@
    Creates map and loads incident data
 ========================================= */
 
+var dashboardMap = null;
+
 function initDashboard() {
 
     /* -------------------------------
-       CREATE LEAFLET MAP
-       Default location: Delhi
+       CREATE LEAFLET MAP (ONCE)
+       Default location: APP_CONFIG.MAP_CENTER
+       Auto-refresh reuses the same map
     ------------------------------- */
-    const map = L.map('map').setView([28.4744, 77.5040], 13);
-
-    /* -------------------------------
-       ADD OPENSTREETMAP TILE LAYER
-    ------------------------------- */
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    if (!dashboardMap) {
+        dashboardMap = createMap('map');
+    }
 
     /* -------------------------------
        LOAD INCIDENTS ON MAP
     ------------------------------- */
-    loadIncidents(map);
+    loadIncidents(dashboardMap);
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
 }
 
 
@@ -91,9 +95,9 @@ function loadIncidents(map) {
                     { color: color, radius: 8 }
                 ).addTo(map)
                     .bindPopup(`
-                    <b>${incident.type}</b><br>
-                    Severity: ${incident.severity}<br>
-                    Status: ${incident.status}
+                    <b>${escapeHTML(incident.type)}</b><br>
+                    Severity: ${escapeHTML(incident.severity)}<br>
+                    Status: ${escapeHTML(incident.status)}
                 `);
             });
 

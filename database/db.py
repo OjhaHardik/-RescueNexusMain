@@ -1,15 +1,15 @@
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.pool import NullPool
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(BASE_DIR)
+from config import DATABASE_URL, IS_VERCEL
 
-DATABASE_PATH = os.path.join(PROJECT_ROOT, "data", "rescue.db")
+if IS_VERCEL:
+    # Serverless functions are short-lived; don't hold pooled connections
+    engine = create_engine(DATABASE_URL, echo=False, poolclass=NullPool)
+else:
+    engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
 
-DATABASE_URL = "postgresql://postgres:root@localhost:5432/rescuenexus"
-
-engine = create_engine(DATABASE_URL, echo=False)
 SessionLocal = sessionmaker(bind=engine)
 
 Base = declarative_base()

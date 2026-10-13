@@ -25,11 +25,8 @@ async function loadIncidentsList() {
    MAP INITIALIZATION
 ========================================= */
 function initMap() {
-    // Default view center (e.g., national capital coordinates)
-    map = L.map('map').setView([28.6139, 77.2090], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    // Default view center comes from config.js
+    map = createMap('map');
 
     map.on('click', function (e) {
         selectedLat = e.latlng.lat;

@@ -2,6 +2,7 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 from database.crud import get_all_incidents, update_incident
+from config import DEFAULT_MAP_LAT, DEFAULT_MAP_LNG
 
 def dashboard_page():
     st.header("Authority Dashboard")
@@ -17,7 +18,7 @@ def dashboard_page():
     st.divider()
 
     # Map
-    m = folium.Map(location=[28.6139, 77.2090], zoom_start=10)
+    m = folium.Map(location=[DEFAULT_MAP_LAT, DEFAULT_MAP_LNG], zoom_start=10)
 
     for inc in incidents:
 

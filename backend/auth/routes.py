@@ -37,6 +37,10 @@ def register(data: RegisterRequest):
         session.close()
         raise HTTPException(status_code=400, detail="User already exists")
 
+    if data.email and session.query(User).filter(User.email == data.email).first():
+        session.close()
+        raise HTTPException(status_code=400, detail="Email already registered")
+
     user = User(
         name=data.name,
         phone=data.phone,

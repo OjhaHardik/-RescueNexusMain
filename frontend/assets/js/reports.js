@@ -6,6 +6,12 @@ let reportsData = [];
 /* =========================================
    LOAD PERMANENT REPORTS FROM API
 ========================================= */
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
 function loadReports() {
     fetch(window.API_BASE_URL + "/reports/")
         .then(res => res.json())
@@ -31,7 +37,7 @@ function loadReports() {
                 else statusBadge = `<span class="badge" style="background: rgba(34, 197, 94, 0.15); color: #22c55e;">Resolved</span>`;
 
                 // Format Team
-                let teamStr = report.assigned_team;
+                let teamStr = escapeHTML(report.assigned_team);
                 if (!teamStr || teamStr === "Not Assigned" || teamStr === "null") {
                     teamStr = `<span style="color:#666; font-style:italic;">Not Assigned</span>`;
                 }
@@ -43,7 +49,7 @@ function loadReports() {
                 table.innerHTML += `
                     <tr>
                         <td data-label="Rep ID">#${report.id}</td>
-                        <td data-label="Emergency">${report.type}</td>
+                        <td data-label="Emergency">${escapeHTML(report.type)}</td>
                         <td data-label="Status">${statusBadge}</td>
                         <td data-label="Team">${teamStr}</td>
                         <td data-label="Logged">${timeStr}</td>

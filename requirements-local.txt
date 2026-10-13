@@ -1,0 +1,6 @@
+# Extra dependencies for running locally (dev server + Streamlit admin)
+-r requirements.txt
+uvicorn==0.41.0
+streamlit==1.54.0
+folium==0.20.0
+streamlit-folium==0.26.1

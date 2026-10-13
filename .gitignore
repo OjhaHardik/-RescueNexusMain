@@ -29,3 +29,9 @@ cache/
 *.py32r
 *.jsaas
 *.css1121s
+
+# Secrets
+.env
+
+# Vercel
+.vercel

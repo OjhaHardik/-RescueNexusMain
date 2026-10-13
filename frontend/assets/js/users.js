@@ -16,11 +16,8 @@ function initMap() {
     const mapContainer = document.getElementById("userMap");
     if (!mapContainer) return;
 
-    map = L.map('userMap').setView([28.6139, 77.2090], 12);
+    map = createMap('userMap');
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
 
     // Add robust search with autocomplete using Leaflet Geocoder
     L.Control.geocoder({
@@ -96,6 +93,12 @@ function detectLocation() {
    LOAD USERS
 ========================================= */
 
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
 function loadUsers() {
     fetch(window.API_BASE_URL + "/users/")
         .then(res => res.json())
@@ -107,8 +110,8 @@ function loadUsers() {
             data.forEach(user => {
                 table.innerHTML += `
                     <tr>
-                        <td data-label="Name">${user.name}</td>
-                        <td data-label="Phone">${user.phone}</td>
+                        <td data-label="Name">${escapeHTML(user.name)}</td>
+                        <td data-label="Phone">${escapeHTML(user.phone)}</td>
                         <td data-label="Latitude">${user.home_latitude || "-"}</td>
                         <td data-label="Longitude">${user.home_longitude || "-"}</td>
                         <td data-label="Status"> Active </td>

@@ -1,19 +1,21 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from modules.severity import classify_severity
+from modules.severity import calculate_severity
 from database.crud import create_incident
 import requests
 
+from config import GEOCODER_URL, GEOCODER_USER_AGENT, DEFAULT_MAP_LAT, DEFAULT_MAP_LNG
+
 def geocode_location(query):
-    url = "https://nominatim.openstreetmap.org/search"
+    url = GEOCODER_URL
     params = {
         "q": query,
         "format": "json",
         "limit": 1
     }
 
-    response = requests.get(url, params=params, headers={"User-Agent": "RescueNexusApp"})
+    response = requests.get(url, params=params, headers={"User-Agent": GEOCODER_USER_AGENT})
 
     if response.status_code == 200 and response.json():
         data = response.json()[0]
@@ -57,7 +59,7 @@ def report_page():
         map_center = [st.session_state.latitude, st.session_state.longitude]
         zoom_level = 15
     else:
-        map_center = [28.6139, 77.2090]  # Default Delhi
+        map_center = [DEFAULT_MAP_LAT, DEFAULT_MAP_LNG]
         zoom_level = 12
 
     # Create map
@@ -96,7 +98,7 @@ def report_page():
             st.error("Please select a location on the map.")
             return
 
-        severity = classify_severity(incident_type, description)
+        severity = calculate_severity(description, incident_type)
 
         data = {
             "type": incident_type,

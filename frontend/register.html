@@ -11,14 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Leaflet & Geocoder -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css" />
 </head>
 
 <body>
 
     <div class="auth-layout" style="padding-top:40px; padding-bottom: 40px; overflow-y: auto;">
-        
+
         <div class="auth-glow-orange"></div>
         <div class="auth-glow-blue"></div>
 
@@ -36,7 +36,7 @@
                 <div class="auth-input-group" style="margin-bottom: 15px;">
                     <label>Phone Number</label>
                     <div class="auth-input-inline">
-                        <input type="text" id="phone" placeholder="7252952519">
+                        <input type="text" id="phone" placeholder="1122334455">
                     </div>
                 </div>
             </div>
@@ -60,11 +60,15 @@
             <!-- Header for map with location detect button -->
             <div style="display:flex; justify-content: space-between; align-items:flex-end;">
                 <label style="font-size: 13px; color: #a1a1aa; font-weight: 500;">Pin Home Location</label>
-                <button class="auth-social-btn" style="width: auto; padding: 6px 14px; margin-bottom: 0; font-size: 12px;" onclick="detectLocation()">Use My Location</button>
+                <button class="auth-social-btn"
+                    style="width: auto; padding: 6px 14px; margin-bottom: 0; font-size: 12px;"
+                    onclick="detectLocation()">Use My Location</button>
             </div>
-            
+
             <!-- Map Container -->
-            <div id="map" style="height:250px; border-radius:12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; margin-bottom: 24px;"></div>
+            <div id="map"
+                style="height:250px; border-radius:12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; margin-bottom: 24px;">
+            </div>
 
             <button class="auth-submit-btn" onclick="register()">Create Account ➔</button>
 
@@ -75,9 +79,11 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
+    <script src="assets/js/config.js"></script>
     <script src="assets/js/register.js"></script>
 
 </body>
+
 </html>

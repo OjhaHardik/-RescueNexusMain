@@ -5,6 +5,12 @@
    and render them as cards
 ========================================= */
 
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
 function loadIncidents() {
 
     fetch(window.API_BASE_URL + "/incidents/")
@@ -53,13 +59,13 @@ function loadIncidents() {
                         </div>
 
                         <div class="incident-middle">
-                            <h3>${incident.type}</h3>
-                            <p>${incident.description}</p>
+                            <h3>${escapeHTML(incident.type)}</h3>
+                            <p>${escapeHTML(incident.description)}</p>
 
                             <div class="incident-meta">
                                 <span class="badge ${incident.severity.toLowerCase()}">${incident.severity}</span>
                                 <span class="status">${incident.status}</span>
-                                <span>Team: ${incident.assigned_team || "Not Assigned"}</span>
+                                <span>Team: ${escapeHTML(incident.assigned_team || "Not Assigned")}</span>
                             </div>
                         </div>
 
@@ -100,7 +106,7 @@ function assignTeam(id) {
     const team = prompt("Enter Team Name to Dispatch (An email alert will be sent to the reporting citizen):");
     if (!team) return;   // Stop if empty input
 
-    fetch(`${window.API_BASE_URL}/incidents/${id}?status=In Progress&assigned_team=${team}`, {
+    fetch(`${window.API_BASE_URL}/incidents/${id}?status=${encodeURIComponent("In Progress")}&assigned_team=${encodeURIComponent(team)}`, {
         method: "PUT"
     })
         .then(() => loadIncidents());  // Refresh list
@@ -152,10 +158,7 @@ function openLocationModal(id, lat, lng) {
     document.getElementById("locationModal").style.display = "block";
     
     if (!locationMapObj) {
-        locationMapObj = L.map('incidentMap').setView([lat, lng], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(locationMapObj);
+        locationMapObj = createMap('incidentMap', [lat, lng], 13);
     } else {
         locationMapObj.setView([lat, lng], 13);
     }
@@ -181,7 +184,7 @@ function searchLocation() {
     const query = document.getElementById("mapSearchInput").value;
     if (!query) return;
     
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+    fetch(`${window.APP_CONFIG.GEOCODER_URL}?format=json&q=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(data => {
             if (data && data.length > 0) {

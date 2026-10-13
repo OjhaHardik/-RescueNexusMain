@@ -2,13 +2,10 @@
    MAP FOR HOME LOCATION SELECTION
 ========================================= */
 
-let map = L.map('map').setView([28.4744, 77.5040], 13); // Greater Noida
+let map = createMap('map');
 let marker = null;
 let selectedLocation = null;
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
 
 // Add robust search with autocomplete using Leaflet Geocoder
 L.Control.geocoder({
@@ -83,7 +80,7 @@ async function register() {
         return;
     }
 
-    const response = await fetch("http://43.205.87.49:8000/register", {
+    const response = await fetch(window.API_BASE_URL + "/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

@@ -1,0 +1,7 @@
+# Backend API dependencies (used by Vercel)
+fastapi==0.129.2
+sqlalchemy==2.0.46
+psycopg2-binary==2.9.11
+pillow==12.1.1
+python-multipart==0.0.22
+requests==2.32.5

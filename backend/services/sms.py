@@ -1,17 +1,20 @@
 import requests
 
+from config import TEXTBELT_URL, TEXTBELT_KEY
+
+
 def send_sms(phone, message):
 
     print("Sending SMS to:", phone)
 
-    url = "https://textbelt.com/text"
-
     payload = {
         "phone": phone,
         "message": message,
-        "key": "textbelt"
+        "key": TEXTBELT_KEY
     }
 
-    response = requests.post(url, data=payload)
-
-    print(response.text)
+    try:
+        response = requests.post(TEXTBELT_URL, data=payload, timeout=10)
+        print(response.text)
+    except Exception as e:
+        print("SMS failed:", e)

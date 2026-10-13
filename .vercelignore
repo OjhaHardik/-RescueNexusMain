@@ -1,0 +1,11 @@
+.venv
+.idea
+.vscode
+cache
+backend/uploads
+**/__pycache__
+*.db
+.env
+app.py
+modules/dashboard.py
+modules/report.py

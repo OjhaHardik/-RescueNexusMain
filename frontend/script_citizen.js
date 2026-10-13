@@ -17,12 +17,9 @@ if (!userId) {
    MAP INITIALIZATION
 ========================================= */
 
-let map = L.map('map').setView([28.4744, 77.5040], 13);
+let map = createMap('map');
 let marker = null;
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
 
 // Add robust search with autocomplete using Leaflet Geocoder
 L.Control.geocoder({
@@ -74,7 +71,40 @@ function detectLocation() {
    SUBMIT INCIDENT
 ========================================= */
 
-function submitIncident() {
+/* =========================================
+   SHRINK IMAGE BEFORE UPLOAD
+   -----------------------------------------
+   Phone photos can exceed the hosting
+   request limit (4.5 MB on Vercel)
+========================================= */
+
+function compressImage(file, maxSize = 1280, quality = 0.8) {
+    return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(blob => resolve(blob || file), "image/jpeg", quality);
+        };
+
+        // Unsupported format in this browser: send the original
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            resolve(file);
+        };
+
+        img.src = url;
+    });
+}
+
+
+async function submitIncident() {
 
     if (!userId) {
         alert("Please login first.");
@@ -91,6 +121,11 @@ function submitIncident() {
     const description = document.getElementById("description").value.trim();
 
     // 🔥 VALIDATION
+    if (!type) {
+        alert("Please select a category and incident type.");
+        return;
+    }
+
     if (!description) {
         alert("Description cannot be empty.");
         return;
@@ -107,10 +142,11 @@ function submitIncident() {
 
     const imageFile = document.getElementById("image").files[0];
     if (imageFile) {
-        formData.append("image", imageFile);
+        const compressed = await compressImage(imageFile);
+        formData.append("image", compressed, "evidence.jpg");
     }
 
-    fetch("http://43.205.87.49:8000/incidents/", {
+    fetch(window.API_BASE_URL + "/incidents/", {
         method: "POST",
         body: formData
     })

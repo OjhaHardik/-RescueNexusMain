@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, LargeBinary
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database.db import Base
@@ -84,3 +84,18 @@ class ReportRecord(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
     image_path = Column(String, nullable=True)
     user_id = Column(Integer, nullable=True)
+
+# =========================================
+# INCIDENT IMAGE MODEL
+# -----------------------------------------
+# Images are stored in the database so they
+# survive on hosts without a persistent disk
+# (e.g. Vercel serverless functions)
+# =========================================
+class IncidentImage(Base):
+    __tablename__ = "incident_images"
+
+    id = Column(Integer, primary_key=True, index=True)
+    incident_id = Column(Integer, index=True, nullable=False)
+    content_type = Column(String, default="image/jpeg")
+    data = Column(LargeBinary, nullable=False)

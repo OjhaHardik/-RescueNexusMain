@@ -9,15 +9,17 @@
 # - User validation during submission
 # =========================================
 
+import io
 import math
 import os
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from collections import defaultdict
 
 from PIL import Image
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
@@ -26,7 +28,7 @@ from backend.schemas import IncidentResponse, ReportResponse
 from backend.users.routes import router as users_router
 from backend.auth.routes import router as auth_router
 from database.db import engine, SessionLocal, Base
-from database.models import Incident, User, ReportRecord
+from database.models import Incident, User, ReportRecord, IncidentImage
 
 from backend.services.sms import send_sms
 from backend.sms.routes import router as sms_router
@@ -34,6 +36,8 @@ from backend.sms.routes import router as sms_router
 from pydantic import BaseModel
 
 from modules.severity import calculate_severity
+
+from config import CORS_ORIGINS, MAPS_LINK_TEMPLATE
 
 # =========================================
 # BROADCAST REQUEST MODEL
@@ -56,7 +60,7 @@ app.include_router(sms_router, prefix="/sms", tags=["SMS"])
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -66,7 +70,11 @@ app.add_middleware(
 # STATIC FILE SERVING (UPLOADS)
 # =========================================
 
-app.mount("/uploads", StaticFiles(directory="backend/uploads"), name="uploads")
+# Legacy images saved to disk before images moved into the database.
+# Only mounted when the folder exists (it doesn't on Vercel).
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
+if os.path.isdir(UPLOAD_DIR):
+    app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 
 # =========================================
@@ -123,34 +131,32 @@ def create_incident(
     if not user:
         raise HTTPException(status_code=401, detail="Invalid user")
 
-    image_path = None
-
     # -----------------------------------------
-    # HANDLE IMAGE UPLOAD (IF PROVIDED)
+    # COMPRESS IMAGE (IF PROVIDED)
     # -----------------------------------------
-    if image:
-        upload_folder = "backend/uploads"
-        os.makedirs(upload_folder, exist_ok=True)
-
-        file_location = os.path.join(upload_folder, image.filename)
-
-        # Open and compress image
-        img = Image.open(image.file)
+    image_bytes = None
+    if image and image.filename:
+        try:
+            img = Image.open(image.file)
+        except Exception:
+            raise HTTPException(status_code=400, detail="Uploaded file is not a valid image")
 
         # Resize large images
         max_size = (800, 800)
         img.thumbnail(max_size)
 
-        img.save(file_location, optimize=True, quality=70)
+        # JPEG has no alpha channel (PNG screenshots etc.)
+        if img.mode != "RGB":
+            img = img.convert("RGB")
 
-        image_path = f"/uploads/{image.filename}"
+        buffer = io.BytesIO()
+        img.save(buffer, format="JPEG", optimize=True, quality=70)
+        image_bytes = buffer.getvalue()
 
     # -----------------------------------------
     # AUTO CALCULATE SEVERITY
     # -----------------------------------------
     auto_severity = calculate_severity(description, incident_type)
-
-    incident_type = incident_type
 
     # -----------------------------------------
     # CREATE INCIDENT RECORD
@@ -161,13 +167,21 @@ def create_incident(
         latitude=latitude,
         longitude=longitude,
         severity=auto_severity,
-        image_path=image_path,
         user_id=user_id
     )
 
     db.add(db_incident)
     db.commit()
     db.refresh(db_incident)
+
+    # -----------------------------------------
+    # STORE IMAGE IN DATABASE
+    # -----------------------------------------
+    if image_bytes:
+        db.add(IncidentImage(incident_id=db_incident.id, data=image_bytes))
+        db_incident.image_path = f"/incidents/{db_incident.id}/image"
+        db.commit()
+        db.refresh(db_incident)
 
     # -----------------------------------------
     # DUAL-LOG TO PERMANENT REPORTS
@@ -197,6 +211,24 @@ def create_incident(
 @app.get("/incidents/", response_model=List[IncidentResponse])
 def get_incidents(db: Session = Depends(get_db)):
     return db.query(Incident).all()
+
+
+# =========================================
+# GET INCIDENT IMAGE
+# =========================================
+
+@app.get("/incidents/{incident_id}/image")
+def get_incident_image(incident_id: int, db: Session = Depends(get_db)):
+    image = db.query(IncidentImage).filter(IncidentImage.incident_id == incident_id).first()
+
+    if not image:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return Response(
+        content=image.data,
+        media_type=image.content_type or "image/jpeg",
+        headers={"Cache-Control": "public, max-age=86400"}
+    )
 
 
 # =========================================
@@ -302,11 +334,18 @@ def delete_incident(incident_id: int, db: Session = Depends(get_db)):
             detail="Only resolved incidents can be deleted"
         )
 
-    # Delete image file if exists
-    if incident.image_path:
-        file_path = "backend" + incident.image_path
+    # Delete legacy image file if exists
+    if incident.image_path and incident.image_path.startswith("/uploads/"):
+        file_path = os.path.join(UPLOAD_DIR, os.path.basename(incident.image_path))
         if os.path.exists(file_path):
             os.remove(file_path)
+
+    db.query(IncidentImage).filter(IncidentImage.incident_id == incident_id).delete()
+
+    # Permanent report keeps its record, but the image no longer exists
+    db.query(ReportRecord).filter(ReportRecord.original_incident_id == incident_id).update(
+        {ReportRecord.image_path: None}
+    )
 
     db.delete(incident)
     db.commit()
@@ -340,6 +379,8 @@ def broadcast_alert(
     incident_id: int,
     radius: float,
     method: str = "all",   # 👈 ADD THIS
+    latitude: Optional[float] = None,    # optional map-selected center
+    longitude: Optional[float] = None,
     db: Session = Depends(get_db)
 ):
 
@@ -348,6 +389,10 @@ def broadcast_alert(
     if not incident:
         raise HTTPException(status_code=404, detail="Incident not found")
 
+    # Broadcast center: map-selected point if given, else incident location
+    center_lat = latitude if latitude is not None else incident.latitude
+    center_lng = longitude if longitude is not None else incident.longitude
+
     users = db.query(User).all()
     notified_users = []
 
@@ -355,7 +400,7 @@ def broadcast_alert(
     # AUTO GENERATE MESSAGE
     # -----------------------------------------
 
-    maps_link = f"https://maps.google.com/?q={incident.latitude},{incident.longitude}"
+    maps_link = MAPS_LINK_TEMPLATE.format(lat=center_lat, lng=center_lng)
 
     message = (
         f"RescueNexus Emergency Alert\n\n"
@@ -371,8 +416,8 @@ def broadcast_alert(
             continue
 
         distance = calculate_distance(
-            incident.latitude,
-            incident.longitude,
+            center_lat,
+            center_lng,
             user.home_latitude,
             user.home_longitude
         )
@@ -381,7 +426,7 @@ def broadcast_alert(
 
             sent = False  # 👈 track if THIS user got any alert
 
-            if method in ["sms", "all"]:
+            if method in ["sms", "all"] and user.phone:
                 send_sms(user.phone, message)
                 sent = True
 

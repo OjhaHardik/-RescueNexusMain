@@ -46,9 +46,10 @@
         </div>
     </div>
 
+    <script src="assets/js/config.js"></script>
     <script>
         function login() {
-            fetch("http://43.205.87.49:8000/login", {
+            fetch(window.API_BASE_URL + "/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
