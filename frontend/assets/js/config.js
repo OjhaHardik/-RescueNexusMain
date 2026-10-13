@@ -22,10 +22,10 @@ window.APP_CONFIG = {
    DEPLOYED_API_URL: "/api",
 
    /* -------------------------------
-      DEFAULT MAP VIEW (Greater Noida)
+      DEFAULT MAP VIEW (Uttari Pitampura, Delhi)
    ------------------------------- */
-   MAP_CENTER: [28.4744, 77.5040],
-   MAP_ZOOM: 13,
+   MAP_CENTER: [28.7151, 77.1390],
+   MAP_ZOOM: 14,
 
    /* -------------------------------
       MAP TILES

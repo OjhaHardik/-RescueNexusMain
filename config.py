@@ -84,5 +84,5 @@ CORS_ORIGINS = [o.strip() for o in _get("CORS_ORIGINS", "*").split(",") if o.str
 # -----------------------------------------
 # MAP DEFAULTS (Streamlit admin)
 # -----------------------------------------
-DEFAULT_MAP_LAT = float(_get("DEFAULT_MAP_LAT", "28.4744"))
-DEFAULT_MAP_LNG = float(_get("DEFAULT_MAP_LNG", "77.5040"))
+DEFAULT_MAP_LAT = float(_get("DEFAULT_MAP_LAT", "28.7151"))
+DEFAULT_MAP_LNG = float(_get("DEFAULT_MAP_LNG", "77.1390"))

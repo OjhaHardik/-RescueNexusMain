@@ -98,7 +98,8 @@ ul, ol { list-style: none; }
     margin-top: auto;
     height: 64px;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr auto auto;
+    gap: 28px;
     align-items: center;
     border-top: 1px solid var(--line);
     font-size: 14px;
@@ -340,7 +341,48 @@ ul, ol { list-style: none; }
 .src-row small { display: block; margin-top: 4px; font-size: 14px; color: var(--faint); }
 .src-row .amt { font-size: 20px; font-weight: 600; }
 
-/* ---------- Slide 7: earnings ---------- */
+/* ---------- Slide 7: running costs & AWS ---------- */
+.run {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    margin-top: 36px;
+}
+
+.costs li.sum, .aws li.sum { border-top: 1px solid var(--line-strong); color: var(--text); font-weight: 600; }
+.run-note { margin-top: 18px; font-size: 16px; color: var(--muted); }
+.run-note b { color: var(--text); font-weight: 600; }
+
+.aws {
+    background: var(--raise);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    align-self: start;
+}
+
+.aws-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; }
+.aws-head i { font-size: 28px; color: var(--accent); }
+.aws-head h3 { font-size: 20px; font-weight: 600; }
+.aws-head p { margin-top: 4px; font-size: 14px; color: var(--faint); }
+
+.aws li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+    font-size: 16px;
+    color: var(--muted);
+}
+
+.aws li small { margin-left: 8px; font-size: 13px; color: var(--faint); }
+.aws li b { color: var(--text); font-weight: 600; white-space: nowrap; }
+.aws-note { margin-top: 12px; font-size: 14px; line-height: 1.5; color: var(--faint); }
+
+/* ---------- Slide 8: earnings ---------- */
 .plans {
     margin-top: 40px;
     display: grid;
@@ -461,22 +503,48 @@ ul, ol { list-style: none; }
 }
 
 .close .thanks { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
-.close a { color: var(--text); font-size: 16px; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+.demo-links { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+
+.demo-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font-size: 16px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+    white-space: nowrap;
+}
+
+.demo-links i { color: var(--accent); font-size: 18px; }
 
 /* ---------- Controls ---------- */
 .controls {
     position: fixed;
-    top: 14px;
-    right: 14px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 2px;
-    padding: 4px;
-    border-radius: var(--radius);
-    background: rgba(16, 21, 31, 0.92);
-    border: 1px solid var(--line);
+    gap: 4px;
+    padding: 6px;
+    border-radius: 999px;   /* interactive controls are pills; content uses 10px */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)), rgba(16, 21, 31, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 18px 50px rgba(3, 6, 12, 0.55);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
     z-index: 10;
     transition: opacity 0.3s ease;
+}
+
+.counter {
+    min-width: 76px;
+    text-align: center;
+    font-family: "Geist Mono", monospace;
+    font-size: 15px;
+    color: var(--muted);
 }
 
 .controls.hidden { opacity: 0; pointer-events: none; }
@@ -485,16 +553,16 @@ ul, ol { list-style: none; }
     border: 0;
     background: transparent;
     color: var(--text);
-    width: 38px;
-    height: 38px;
-    border-radius: 7px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     cursor: pointer;
     display: grid;
     place-items: center;
-    font-size: 18px;
+    font-size: 22px;
 }
 
-.controls button:hover { background: rgba(255, 255, 255, 0.07); }
+.controls button:hover { background: rgba(255, 255, 255, 0.1); }
 .controls button:active { transform: scale(0.96); }
 .controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
@@ -545,17 +613,17 @@ ul, ol { list-style: none; }
         <div>
             <div class="mark wordmark">Rescue<span>Nexus</span></div>
             <h1 class="title-h">Emergency help, one tap away.</h1>
-            <p class="title-sub">A reporting and alert service for housing societies, campuses and cities, starting in Greater Noida.</p>
+            <p class="title-sub">A reporting and alert service for housing societies, campuses and cities, starting in Pitampura, Delhi.</p>
             <div class="founders" id="founders"></div>
         </div>
         <div>
-            <div class="shot title-shot"><img src="assets/control-room.jpg" alt="RescueNexus control room showing live emergencies on a map of Greater Noida"></div>
+            <div class="shot title-shot"><img src="assets/control-room.jpg" alt="RescueNexus control room showing live emergencies on a map of Pitampura, Delhi"></div>
             <p class="shot-caption">The RescueNexus control room, working today.</p>
         </div>
     </div>
     <div class="foot">
-        <span>PSDA: Pitch Your Startup</span>
-        <span>Entrepreneurship Development, Semester IX</span>
+        <span>PSDA: Pitch Your Startup, Entrepreneurship Development</span>
+        <span>BA LLB, Semester XI</span>
         <span class="page"></span>
     </div>
 </section>
@@ -657,7 +725,7 @@ ul, ol { list-style: none; }
     <dl class="facts">
         <div>
             <dt>Location</dt>
-            <dd><b>Greater Noida, Uttar Pradesh</b><p>Hundreds of new housing societies, the Knowledge Park colleges and busy expressways, close to Delhi-NCR investors.</p></dd>
+            <dd><b>Pitampura, Delhi</b><p>A dense residential area with DDA flats, housing societies and active RWAs, next to the Netaji Subhash Place business hub and on the Metro Red Line.</p></dd>
         </div>
         <div>
             <dt>Set-up</dt>
@@ -690,12 +758,12 @@ ul, ol { list-style: none; }
                 <p class="label">to run the first year</p>
             </div>
             <ul class="costs">
-                <li>Marketing and awareness<b>₹2,00,000</b></li>
-                <li>Building and running the service<b>₹2,00,000</b></li>
-                <li>Safety reserve<b>₹2,00,000</b></li>
-                <li>Team travel and field visits<b>₹1,75,000</b></li>
-                <li>Office rent, 12 months<b>₹1,50,000</b></li>
-                <li>Registration and legal work<b>₹75,000</b></li>
+                <li>Running costs for 12 months (₹30,000 a month)<b>₹3,60,000</b></li>
+                <li>Launch marketing and free trials<b>₹1,90,000</b></li>
+                <li>Finishing the service<b>₹1,50,000</b></li>
+                <li>Safety reserve<b>₹1,50,000</b></li>
+                <li>Laptops and office set-up<b>₹1,00,000</b></li>
+                <li>Registration, trademark and legal work<b>₹50,000</b></li>
             </ul>
         </div>
 
@@ -727,7 +795,51 @@ ul, ol { list-style: none; }
     </div>
 </section>
 
-<!-- 7. EARNINGS -->
+<!-- 7. RUNNING COSTS & AWS PLAN -->
+<section class="slide" data-speaker="0">
+    <h2 class="h">Lean to run: <em>₹30,000 a month</em></h2>
+
+    <div class="run">
+        <div>
+            <ul class="costs">
+                <li>Help desk assistant, part-time<b>₹8,000</b></li>
+                <li>Shared office desk in Pitampura<b>₹6,000</b></li>
+                <li>Ongoing marketing<b>₹5,000</b></li>
+                <li>Cloud hosting on AWS<b>₹3,500</b></li>
+                <li>Travel and field visits<b>₹3,000</b></li>
+                <li>Accountant and legal filings<b>₹2,500</b></li>
+                <li>Phones and internet<b>₹2,000</b></li>
+                <li class="sum">Total per month<b>₹30,000</b></li>
+            </ul>
+            <p class="run-note"><b>Founders take no salary in Year 1.</b> Profits go back into growth.</p>
+        </div>
+
+        <div class="aws">
+            <div class="aws-head">
+                <i class="ph ph-cloud"></i>
+                <div><h3>Our AWS plan</h3><p>Amazon Web Services, Mumbai region. Rough monthly estimate.</p></div>
+            </div>
+            <ul>
+                <li><span>Website and app<small>Amazon Lightsail</small></span><b>₹1,000</b></li>
+                <li><span>Database of all reports<small>Amazon RDS</small></span><b>₹1,500</b></li>
+                <li><span>SMS alerts, about 2,500 a month<small>Amazon SNS</small></span><b>₹600</b></li>
+                <li><span>Backups and web address</span><b>₹200</b></li>
+                <li><span>Photo storage<small>Amazon S3</small></span><b>₹150</b></li>
+                <li><span>Email alerts<small>Amazon SES</small></span><b>₹50</b></li>
+                <li class="sum"><span>Total</span><b>about ₹3,500</b></li>
+            </ul>
+            <p class="aws-note">Pay only for what we use. We will apply for AWS Activate startup credits to cover the first year.</p>
+        </div>
+    </div>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 8. EARNINGS -->
 <section class="slide" data-speaker="1">
     <h2 class="h">Simple monthly plans, <em>steady income</em></h2>
 
@@ -761,9 +873,9 @@ ul, ol { list-style: none; }
     <div class="equation">
         <div><div class="num">₹1.27 lakh</div><small>monthly income</small></div>
         <div class="num op">−</div>
-        <div><div class="num">₹80,000</div><small>monthly costs</small></div>
+        <div><div class="num">₹30,000</div><small>monthly costs</small></div>
         <div class="num op">=</div>
-        <div class="res"><div class="num">₹47,000</div><small>monthly profit</small></div>
+        <div class="res"><div class="num">₹97,000</div><small>monthly profit, about ₹11.7 lakh a year</small></div>
         <p class="goal">Once we reach <b>25 societies, 8 campuses or businesses and 1 city</b>. Our goal is to get there within the first year.</p>
     </div>
 
@@ -776,7 +888,7 @@ ul, ol { list-style: none; }
     </div>
 </section>
 
-<!-- 8. PROMOTION -->
+<!-- 9. PROMOTION -->
 <section class="slide" data-speaker="2">
     <h2 class="h">How people will <em>hear about us</em></h2>
 
@@ -798,7 +910,7 @@ ul, ol { list-style: none; }
                 <p class="when">Months 4-8</p>
                 <h3>Spread it</h3>
                 <ul>
-                    <li>Student ambassadors in Knowledge Park colleges</li>
+                    <li>Student ambassadors in North Delhi colleges</li>
                     <li>Short safety videos on Instagram and YouTube</li>
                     <li>Posts in society WhatsApp groups</li>
                 </ul>
@@ -808,7 +920,7 @@ ul, ol { list-style: none; }
                 <p class="when">Months 9-12</p>
                 <h3>Grow it</h3>
                 <ul>
-                    <li>Road Safety Week tie-up with traffic police</li>
+                    <li>Road Safety Week tie-up with Delhi Traffic Police</li>
                     <li>Stories in local newspapers and FM radio</li>
                     <li>Refer a society, get one month free</li>
                 </ul>
@@ -828,7 +940,7 @@ ul, ol { list-style: none; }
     </div>
 </section>
 
-<!-- 9. THE ASK -->
+<!-- 10. THE ASK -->
 <section class="slide" data-speaker="0">
     <h2 class="h">Our offer to the panel</h2>
 
@@ -847,16 +959,19 @@ ul, ol { list-style: none; }
         <div class="use">
             <h3>How we will use your money</h3>
             <ul>
-                <li>Marketing and awareness<b>₹2,00,000</b></li>
-                <li>Free trials in 25 societies<b>₹1,50,000</b></li>
-                <li>Building and running the service<b>₹1,50,000</b></li>
+                <li>Launch marketing and free trials<b>₹2,00,000</b></li>
+                <li>Finishing the service<b>₹1,50,000</b></li>
+                <li>Laptops and office set-up<b>₹1,00,000</b></li>
+                <li>Safety reserve<b>₹1,00,000</b></li>
                 <li>Company registration and trademark<b>₹50,000</b></li>
-                <li>Safety reserve<b>₹50,000</b></li>
                 <li class="total">Total<b>₹6,00,000</b></li>
             </ul>
             <div class="close">
                 <span class="thanks">Thank you. Questions?</span>
-                <a href="https://rescue-nexus-main.vercel.app/login.html" target="_blank" rel="noopener">Try the live demo</a>
+                <div class="demo-links">
+                    <a href="https://rescue-nexus-main.vercel.app/login.html" target="_blank" rel="noopener"><i class="ph ph-user"></i>Try citizen panel</a>
+                    <a href="https://rescue-nexus-main.vercel.app/" target="_blank" rel="noopener"><i class="ph ph-squares-four"></i>Try admin panel</a>
+                </div>
             </div>
         </div>
     </div>
@@ -873,6 +988,7 @@ ul, ol { list-style: none; }
 
 <div class="controls" id="controls">
     <button id="prevBtn" aria-label="Previous slide"><i class="ph ph-caret-left"></i></button>
+    <span class="counter" id="counter">1 / 10</span>
     <button id="nextBtn" aria-label="Next slide"><i class="ph ph-caret-right"></i></button>
     <button id="fsBtn" aria-label="Full screen (F)"><i class="ph ph-corners-out"></i></button>
 </div>
@@ -938,6 +1054,7 @@ function show(index) {
     current = Math.max(0, Math.min(slides.length - 1, index));
     slides.forEach((s, i) => s.classList.toggle("active", i === current));
     progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+    document.getElementById("counter").textContent = `${current + 1} / ${slides.length}`;
     history.replaceState(null, "", "#" + (current + 1));
 }
 
