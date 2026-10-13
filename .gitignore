@@ -35,3 +35,6 @@ cache/
 
 # Vercel
 .vercel
+
+# Pitch deck copy made during Vercel build
+frontend/pitch/

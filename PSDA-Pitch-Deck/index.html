@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RescueNexus Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+/* =========================================================
+   Design tokens
+   One background (brand), one accent (brand orange),
+   one radius (10px), hairlines instead of boxes.
+========================================================== */
+:root {
+    --bg: #0b0f17;
+    --raise: #10151f;
+    --line: rgba(255, 255, 255, 0.1);
+    --line-strong: rgba(255, 255, 255, 0.18);
+    --text: #eef0f3;
+    --muted: #9aa2b1;
+    --faint: #6b7383;
+    --accent: #f06a1f;
+    --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    height: 100%;
+    background: #070a10;
+    color: var(--text);
+    font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "tnum" 1;
+    overflow: hidden;
+}
+
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+
+/* ---------- 16:9 stage scaled to any screen ---------- */
+.viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+
+.stage {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    flex-shrink: 0;
+    transform-origin: center center;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    padding: 64px 88px 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide.active { opacity: 1; visibility: visible; }
+
+/* ---------- Type scale ---------- */
+.h {
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    max-width: 1100px;
+}
+
+.h em { font-style: normal; color: var(--accent); }
+
+.body { font-size: 19px; line-height: 1.55; color: var(--muted); max-width: 62ch; }
+
+.num {
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--faint);
+}
+
+/* ---------- Footer ---------- */
+.foot {
+    margin-top: auto;
+    height: 64px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--faint);
+}
+
+.foot .page { justify-self: end; font-family: "Geist Mono", monospace; font-size: 13px; }
+
+.mark { font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.mark span { color: var(--accent); }
+
+/* ---------- Slide 1: title ---------- */
+.s-title { padding-top: 0; }
+
+.title-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 520px 1fr;
+    gap: 56px;
+    align-items: center;
+}
+
+.wordmark { font-size: 30px; }
+
+.title-h {
+    margin-top: 40px;
+    font-size: 58px;
+    line-height: 1.04;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+}
+
+.title-sub { margin-top: 22px; font-size: 20px; line-height: 1.5; color: var(--muted); }
+
+.founders { margin-top: 40px; }
+
+.founders div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+}
+
+.founders div:last-child { border-bottom: 1px solid var(--line); }
+.founders b { font-size: 17px; font-weight: 600; }
+.founders small { font-size: 15px; color: var(--muted); }
+
+.shot {
+    border-radius: var(--radius);
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 30px 80px rgba(3, 6, 12, 0.6);
+}
+
+.shot img { display: block; width: 100%; height: auto; }
+
+.title-shot { width: 760px; margin-right: -200px; }
+.shot-caption { margin-top: 14px; font-size: 14px; color: var(--faint); }
+
+/* ---------- Slide 2: problem & idea ---------- */
+.problem {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 400px 1fr 250px;
+    gap: 48px;
+    margin-top: 40px;
+    align-items: start;
+}
+
+.stat .num { font-size: 92px; color: var(--accent); }
+.stat p { margin-top: 16px; font-size: 19px; line-height: 1.45; }
+.stat .src { margin-top: 10px; font-size: 13px; color: var(--faint); line-height: 1.45; }
+
+.pains { margin-top: 30px; border-top: 1px solid var(--line); }
+.pains li { padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 17px; color: var(--muted); }
+
+.flow-title { font-size: 15px; color: var(--faint); margin-bottom: 8px; }
+
+.flow li {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.flow li:first-child { border-top: 1px solid var(--line); }
+.flow b { font-size: 22px; font-weight: 600; letter-spacing: -0.015em; }
+.flow p { font-size: 17px; line-height: 1.5; color: var(--muted); }
+
+.phone { width: 250px; border-radius: var(--radius); }
+
+/* ---------- Slide 3: customers ---------- */
+.cust {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    margin-top: 44px;
+}
+
+.primary-buyer { border-top: 2px solid var(--accent); padding-top: 26px; }
+.primary-buyer .label { color: var(--accent); }
+.primary-buyer h3 { margin-top: 12px; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+.primary-buyer p { margin-top: 16px; font-size: 18px; line-height: 1.55; color: var(--muted); }
+
+.why { margin-top: 26px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.why .num { font-size: 34px; }
+.why small { display: block; margin-top: 8px; font-size: 14px; color: var(--faint); line-height: 1.4; }
+
+.buyers { border-top: 1px solid var(--line-strong); }
+
+.buyers li {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 14px;
+}
+
+.buyers i { font-size: 24px; color: var(--muted); margin-top: 2px; }
+.buyers b { font-size: 20px; font-weight: 600; }
+.buyers p { margin-top: 4px; font-size: 16px; color: var(--muted); line-height: 1.5; }
+
+.free-line { margin-top: 22px; font-size: 18px; color: var(--muted); }
+.free-line b { color: var(--text); font-weight: 600; }
+
+/* ---------- Slide 4: selling points ---------- */
+.usps {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+}
+
+.usps li {
+    padding: 22px 28px 22px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.usps li:not(:nth-child(3n + 1)) { padding-left: 28px; border-left: 1px solid var(--line); }
+.usps i { font-size: 28px; color: var(--accent); }
+.usps b { display: block; margin-top: 14px; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+.usps p { margin-top: 8px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+
+.pull {
+    margin-top: 26px;
+    padding-left: 22px;
+    border-left: 2px solid var(--accent);
+    font-size: 21px;
+    line-height: 1.45;
+    max-width: 880px;
+}
+
+.pull span { color: var(--muted); }
+
+/* ---------- Slide 5: operations & team ---------- */
+.facts {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.facts dt { font-size: 14px; color: var(--faint); }
+.facts dd b { display: block; margin-top: 8px; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+.facts dd p { margin-top: 8px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+
+.team {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line-strong);
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 40px;
+}
+
+.team .role { font-size: 14px; color: var(--accent); font-weight: 500; }
+.team h3 { margin-top: 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+.team p { margin-top: 10px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+
+.team-note { margin-top: 24px; font-size: 16px; color: var(--muted); }
+.team-note b { color: var(--text); font-weight: 600; }
+
+/* ---------- Slide 6: funds ---------- */
+.funds {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 72px;
+    margin-top: 38px;
+}
+
+.big-total .num { font-size: 84px; }
+.big-total .label { margin-top: 10px; font-size: 16px; }
+
+.costs { margin-top: 28px; }
+
+.costs li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 0;
+    border-top: 1px solid var(--line);
+    font-size: 17px;
+    color: var(--muted);
+}
+
+.costs li b { color: var(--text); font-weight: 600; white-space: nowrap; }
+
+.sources h3 { font-size: 20px; font-weight: 600; }
+
+.split-bar {
+    display: grid;
+    grid-template-columns: 15fr 25fr 60fr;
+    gap: 4px;
+    height: 12px;
+    margin: 22px 0 26px;
+}
+
+.split-bar span { border-radius: 3px; }
+.split-bar span:nth-child(1) { background: rgba(255, 255, 255, 0.28); }
+.split-bar span:nth-child(2) { background: rgba(255, 255, 255, 0.55); }
+.split-bar span:nth-child(3) { background: var(--accent); }
+
+.src-row {
+    display: grid;
+    grid-template-columns: 12px 1fr auto;
+    gap: 14px;
+    align-items: start;
+    padding: 15px 0;
+    border-top: 1px solid var(--line);
+}
+
+.src-row .key { width: 12px; height: 12px; border-radius: 3px; margin-top: 5px; }
+.src-row b { font-size: 18px; font-weight: 600; }
+.src-row small { display: block; margin-top: 4px; font-size: 14px; color: var(--faint); }
+.src-row .amt { font-size: 20px; font-weight: 600; }
+
+/* ---------- Slide 7: earnings ---------- */
+.plans {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.plan { padding: 24px 26px 26px; border-left: 1px solid var(--line); }
+.plan:first-child { border-left: 0; padding-left: 0; }
+.plan.main { border-top: 2px solid var(--accent); margin-top: -1px; }
+.plan .label { font-size: 15px; }
+.plan.main .label { color: var(--accent); }
+.plan .num { margin-top: 14px; font-size: 42px; }
+.plan .per { margin-top: 6px; font-size: 15px; color: var(--faint); }
+.plan p { margin-top: 14px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+
+.equation {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto 1fr;
+    align-items: start;
+    gap: 22px;
+}
+
+.equation .num { font-size: 40px; }
+.equation .op { color: var(--faint); font-weight: 400; }
+.equation .res .num { color: var(--accent); }
+.equation small { display: block; margin-top: 8px; font-size: 14px; color: var(--faint); }
+
+.goal {
+    justify-self: end;
+    align-self: center;
+    max-width: 330px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+
+.goal b { color: var(--text); font-weight: 600; }
+
+.extra { margin-top: 26px; font-size: 16px; color: var(--muted); }
+
+/* ---------- Slide 8: promotion ---------- */
+.timeline { margin-top: 52px; position: relative; }
+
+.track {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line-strong);
+}
+
+.phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; position: relative; }
+
+.phase .tick {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+}
+
+.phase:nth-child(1) .tick { background: var(--accent); }
+.phase .when { margin-top: 22px; font-size: 14px; color: var(--faint); font-family: "Geist Mono", monospace; }
+.phase h3 { margin-top: 8px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+.phase ul { margin-top: 18px; }
+.phase li { padding: 11px 0; border-top: 1px solid var(--line); font-size: 16.5px; line-height: 1.45; color: var(--muted); }
+
+.promo-foot {
+    margin-top: 38px;
+    display: flex;
+    gap: 64px;
+    align-items: baseline;
+}
+
+.promo-foot .num { font-size: 36px; }
+.promo-foot small { display: block; margin-top: 8px; font-size: 14px; color: var(--faint); }
+
+/* ---------- Slide 9: the ask ---------- */
+.ask {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 36px;
+}
+
+.ask-num { font-size: 120px; color: var(--accent); }
+.ask-for { margin-top: 18px; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+.ask-val { margin-top: 10px; font-size: 17px; color: var(--muted); }
+
+.terms { margin-top: 34px; border-top: 1px solid var(--line); }
+.terms li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 16.5px; color: var(--muted); }
+
+.use h3 { font-size: 20px; font-weight: 600; margin-bottom: 14px; }
+
+.use li {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    font-size: 17px;
+    color: var(--muted);
+}
+
+.use li b { color: var(--text); font-weight: 600; }
+.use li.total { border-top: 1px solid var(--line-strong); color: var(--text); font-weight: 600; }
+
+.close {
+    margin-top: 28px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.close .thanks { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+.close a { color: var(--text); font-size: 16px; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+
+/* ---------- Controls ---------- */
+.controls {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: var(--radius);
+    background: rgba(16, 21, 31, 0.92);
+    border: 1px solid var(--line);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.controls.hidden { opacity: 0; pointer-events: none; }
+
+.controls button {
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    width: 38px;
+    height: 38px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+}
+
+.controls button:hover { background: rgba(255, 255, 255, 0.07); }
+.controls button:active { transform: scale(0.96); }
+.controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+    z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .slide, .progress, .controls { transition: none; }
+}
+
+/* ---------- Print / Save as PDF: one slide per page ---------- */
+@media print {
+    @page { size: 1280px 720px; margin: 0; }
+    html, body { overflow: visible; height: auto; background: var(--bg); }
+    .viewport { position: static; display: block; }
+    .stage { transform: none !important; width: auto; height: auto; }
+    .slide {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        opacity: 1;
+        visibility: visible;
+        break-after: page;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .controls, .progress { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="viewport">
+<div class="stage" id="stage">
+
+<!-- 1. TITLE -->
+<section class="slide s-title active" data-speaker="0">
+    <div class="title-grid">
+        <div>
+            <div class="mark wordmark">Rescue<span>Nexus</span></div>
+            <h1 class="title-h">Emergency help, one tap away.</h1>
+            <p class="title-sub">A reporting and alert service for housing societies, campuses and cities, starting in Greater Noida.</p>
+            <div class="founders" id="founders"></div>
+        </div>
+        <div>
+            <div class="shot title-shot"><img src="assets/control-room.jpg" alt="RescueNexus control room showing live emergencies on a map of Greater Noida"></div>
+            <p class="shot-caption">The RescueNexus control room, working today.</p>
+        </div>
+    </div>
+    <div class="foot">
+        <span>PSDA: Pitch Your Startup</span>
+        <span>Entrepreneurship Development, Semester IX</span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 2. PROBLEM & IDEA -->
+<section class="slide" data-speaker="0">
+    <h2 class="h">In an emergency, every minute lost <em>costs lives.</em></h2>
+
+    <div class="problem">
+        <div class="stat">
+            <div class="num">1.68 lakh</div>
+            <p>people died in road accidents in India in 2022 alone.</p>
+            <p class="src">Source: Road Accidents in India 2022, Ministry of Road Transport and Highways</p>
+            <ul class="pains">
+                <li>People panic and don't know whom to call.</li>
+                <li>A phone call can't show a photo or the exact spot.</li>
+                <li>Neighbours in danger are never warned.</li>
+            </ul>
+        </div>
+
+        <div>
+            <p class="flow-title">Our answer: RescueNexus</p>
+            <ol class="flow">
+                <li><b>Report</b><p>A citizen picks the emergency, marks the spot on a map and adds a photo. It takes about 30 seconds.</p></li>
+                <li><b>Respond</b><p>The control room sees every case on a live map, most urgent first, and sends the right team.</p></li>
+                <li><b>Alert</b><p>Everyone living nearby gets a warning by SMS and email. The reporter gets updates.</p></li>
+            </ol>
+        </div>
+
+        <div class="shot phone"><img src="assets/report-form.jpg" alt="The citizen's emergency report form on a phone"></div>
+    </div>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 3. CUSTOMERS -->
+<section class="slide" data-speaker="2">
+    <h2 class="h">Organisations pay. <em>Citizens never do.</em></h2>
+
+    <div class="cust">
+        <div class="primary-buyer">
+            <p class="label">Our first customers</p>
+            <h3>Housing societies and Resident Welfare Associations</h3>
+            <p>They are responsible for the safety of hundreds of families, already collect a monthly maintenance fee, and need a faster answer to fires, medical emergencies, theft and lift failures.</p>
+            <div class="why">
+                <div><div class="num">₹5</div><small>per flat, per month</small></div>
+                <div><div class="num">1</div><small>decision maker: the RWA committee</small></div>
+                <div><div class="num">24×7</div><small>protection for every resident</small></div>
+            </div>
+        </div>
+
+        <div>
+            <ul class="buyers">
+                <li><i class="ph ph-graduation-cap"></i><div><b>Colleges and schools</b><p>Large campuses and hostels with thousands of students to keep safe.</p></div></li>
+                <li><i class="ph ph-buildings"></i><div><b>Hospitals, factories and malls</b><p>Crowded places that must respond fast and keep proper records.</p></div></li>
+                <li><i class="ph ph-bank"></i><div><b>City and district authorities</b><p>Municipal bodies, disaster management cells and traffic police.</p></div></li>
+            </ul>
+            <p class="free-line"><b>Citizens use it free, always.</b> No one should pay to ask for help.</p>
+        </div>
+    </div>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 4. SELLING POINTS -->
+<section class="slide" data-speaker="2">
+    <h2 class="h">Why customers will <em>choose us</em></h2>
+
+    <ul class="usps">
+        <li><i class="ph ph-timer"></i><b>Report in 30 seconds</b><p>Three steps: type of emergency, spot on the map, photo. No long forms.</p></li>
+        <li><i class="ph ph-warning"></i><b>Most urgent first</b><p>Words like "people trapped" or "unconscious" mark a case as critical, so it is never missed.</p></li>
+        <li><i class="ph ph-broadcast"></i><b>The whole area is warned</b><p>One click alerts every resident within a chosen distance.</p></li>
+        <li><i class="ph ph-chat-text"></i><b>Works by simple SMS</b><p>No smartphone or internet? A text message is enough to report.</p></li>
+        <li><i class="ph ph-scales"></i><b>A record that holds up</b><p>Time, place and photo are saved permanently. Useful for police complaints, insurance claims and accountability.</p></li>
+        <li><i class="ph ph-hand-heart"></i><b>Free for every citizen</b><p>Organisations cover the cost, so anyone can ask for help.</p></li>
+    </ul>
+
+    <p class="pull">We support 112, we don't replace it. <span>A call reaches one person. We also send a photo, the exact spot and a warning to the neighbourhood.</span></p>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 5. OPERATIONS & TEAM -->
+<section class="slide" data-speaker="1">
+    <h2 class="h">How we will <em>run the business</em></h2>
+
+    <dl class="facts">
+        <div>
+            <dt>Location</dt>
+            <dd><b>Greater Noida, Uttar Pradesh</b><p>Hundreds of new housing societies, the Knowledge Park colleges and busy expressways, close to Delhi-NCR investors.</p></dd>
+        </div>
+        <div>
+            <dt>Set-up</dt>
+            <dd><b>A small shared office</b><p>Laptops, phones and a 24×7 help desk. The service runs online, so no heavy machinery is needed. A technology partner maintains it.</p></dd>
+        </div>
+        <div>
+            <dt>Legal form</dt>
+            <dd><b>Private Limited Company</b><p>Recognised under Startup India (DPIIT) for tax benefits, and compliant with the Digital Personal Data Protection Act, 2023.</p></dd>
+        </div>
+    </dl>
+
+    <div class="team" id="team"></div>
+    <p class="team-note"><b>A founding team of law students.</b> Contracts, data privacy and dealing with public authorities are handled in-house, from day one.</p>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 6. FUNDS -->
+<section class="slide" data-speaker="1">
+    <h2 class="h">What we need, and <em>where it comes from</em></h2>
+
+    <div class="funds">
+        <div>
+            <div class="big-total">
+                <div class="num">₹10 lakh</div>
+                <p class="label">to run the first year</p>
+            </div>
+            <ul class="costs">
+                <li>Marketing and awareness<b>₹2,00,000</b></li>
+                <li>Building and running the service<b>₹2,00,000</b></li>
+                <li>Safety reserve<b>₹2,00,000</b></li>
+                <li>Team travel and field visits<b>₹1,75,000</b></li>
+                <li>Office rent, 12 months<b>₹1,50,000</b></li>
+                <li>Registration and legal work<b>₹75,000</b></li>
+            </ul>
+        </div>
+
+        <div class="sources">
+            <h3>How we will arrange it</h3>
+            <div class="split-bar"><span></span><span></span><span></span></div>
+            <div class="src-row">
+                <span class="key" style="background:rgba(255,255,255,0.28)"></span>
+                <div><b>Founders' savings</b><small>₹50,000 from each founder</small></div>
+                <span class="amt">₹1.5 lakh</span>
+            </div>
+            <div class="src-row">
+                <span class="key" style="background:rgba(255,255,255,0.55)"></span>
+                <div><b>Government seed grant</b><small>Startup India Seed Fund, through a college incubator</small></div>
+                <span class="amt">₹2.5 lakh</span>
+            </div>
+            <div class="src-row">
+                <span class="key" style="background:var(--accent)"></span>
+                <div><b>Investors on this panel</b><small>In return for a share of the company</small></div>
+                <span class="amt">₹6 lakh</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 7. EARNINGS -->
+<section class="slide" data-speaker="1">
+    <h2 class="h">Simple monthly plans, <em>steady income</em></h2>
+
+    <div class="plans">
+        <div class="plan">
+            <p class="label">Citizens</p>
+            <div class="num">Free</div>
+            <p class="per">always</p>
+            <p>Report emergencies and receive alerts.</p>
+        </div>
+        <div class="plan main">
+            <p class="label">Society plan</p>
+            <div class="num">₹2,499</div>
+            <p class="per">per month</p>
+            <p>Housing societies and RWAs. About ₹5 per flat.</p>
+        </div>
+        <div class="plan">
+            <p class="label">Campus and business plan</p>
+            <div class="num">₹4,999</div>
+            <p class="per">per month</p>
+            <p>Colleges, hospitals, factories and malls.</p>
+        </div>
+        <div class="plan">
+            <p class="label">City plan</p>
+            <div class="num">₹3 lakh</div>
+            <p class="per">per year, onwards</p>
+            <p>Municipal bodies and district authorities.</p>
+        </div>
+    </div>
+
+    <div class="equation">
+        <div><div class="num">₹1.27 lakh</div><small>monthly income</small></div>
+        <div class="num op">−</div>
+        <div><div class="num">₹80,000</div><small>monthly costs</small></div>
+        <div class="num op">=</div>
+        <div class="res"><div class="num">₹47,000</div><small>monthly profit</small></div>
+        <p class="goal">Once we reach <b>25 societies, 8 campuses or businesses and 1 city</b>. Our goal is to get there within the first year.</p>
+    </div>
+
+    <p class="extra">Also: a one-time ₹5,000 set-up and training fee per customer, paid SMS alert packs, and yearly safety reports for societies.</p>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 8. PROMOTION -->
+<section class="slide" data-speaker="2">
+    <h2 class="h">How people will <em>hear about us</em></h2>
+
+    <div class="timeline">
+        <div class="track"></div>
+        <div class="phases">
+            <div class="phase">
+                <div class="tick"></div>
+                <p class="when">Months 1-3</p>
+                <h3>Prove it</h3>
+                <ul>
+                    <li>Free one-month trial in 5 housing societies</li>
+                    <li>Safety workshops with a live demo at RWA meetings</li>
+                    <li>Satisfied residents tell other societies</li>
+                </ul>
+            </div>
+            <div class="phase">
+                <div class="tick"></div>
+                <p class="when">Months 4-8</p>
+                <h3>Spread it</h3>
+                <ul>
+                    <li>Student ambassadors in Knowledge Park colleges</li>
+                    <li>Short safety videos on Instagram and YouTube</li>
+                    <li>Posts in society WhatsApp groups</li>
+                </ul>
+            </div>
+            <div class="phase">
+                <div class="tick"></div>
+                <p class="when">Months 9-12</p>
+                <h3>Grow it</h3>
+                <ul>
+                    <li>Road Safety Week tie-up with traffic police</li>
+                    <li>Stories in local newspapers and FM radio</li>
+                    <li>Refer a society, get one month free</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="promo-foot">
+        <div><div class="num">₹2 lakh</div><small>promotion budget, first year</small></div>
+        <div><div class="num">25 societies</div><small>about 10,000 families covered</small></div>
+    </div>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+<!-- 9. THE ASK -->
+<section class="slide" data-speaker="0">
+    <h2 class="h">Our offer to the panel</h2>
+
+    <div class="ask">
+        <div>
+            <div class="num ask-num">₹6 lakh</div>
+            <p class="ask-for">for 12% of RescueNexus</p>
+            <p class="ask-val">This values the company at ₹50 lakh.</p>
+            <ul class="terms">
+                <li>A share in every year's profits</li>
+                <li>Monthly progress reports</li>
+                <li>A say in major decisions</li>
+            </ul>
+        </div>
+
+        <div class="use">
+            <h3>How we will use your money</h3>
+            <ul>
+                <li>Marketing and awareness<b>₹2,00,000</b></li>
+                <li>Free trials in 25 societies<b>₹1,50,000</b></li>
+                <li>Building and running the service<b>₹1,50,000</b></li>
+                <li>Company registration and trademark<b>₹50,000</b></li>
+                <li>Safety reserve<b>₹50,000</b></li>
+                <li class="total">Total<b>₹6,00,000</b></li>
+            </ul>
+            <div class="close">
+                <span class="thanks">Thank you. Questions?</span>
+                <a href="https://rescue-nexus-main.vercel.app/login.html" target="_blank" rel="noopener">Try the live demo</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="foot">
+        <span class="mark">Rescue<span>Nexus</span></span>
+        <span data-presenter></span>
+        <span class="page"></span>
+    </div>
+</section>
+
+</div>
+</div>
+
+<div class="controls" id="controls">
+    <button id="prevBtn" aria-label="Previous slide"><i class="ph ph-caret-left"></i></button>
+    <button id="nextBtn" aria-label="Next slide"><i class="ph ph-caret-right"></i></button>
+    <button id="fsBtn" aria-label="Full screen (F)"><i class="ph ph-corners-out"></i></button>
+</div>
+
+<script>
+/* =========================================
+   TEAM DETAILS (edit names and roles here only)
+   They appear on the title slide, the team
+   slide and the "Presented by" footer.
+========================================= */
+const TEAM = [
+    {
+        name: "Niharika Deval",
+        role: "Founder and CEO",
+        duty: "Leads the company, speaks to investors and builds partnerships with local authorities."
+    },
+    {
+        name: "Arpita",
+        role: "Head of Legal and Finance",
+        duty: "Company registration, contracts with societies and government, data privacy and the accounts."
+    },
+    {
+        name: "Komal",
+        role: "Head of Growth and Operations",
+        duty: "Signs up societies and colleges, trains their staff, runs the help desk and the promotion plan."
+    }
+];
+
+document.getElementById("founders").innerHTML = TEAM.map(m =>
+    `<div><b>${m.name}</b><small>${m.role}</small></div>`).join("");
+
+document.getElementById("team").innerHTML = TEAM.map(m => `
+    <div>
+        <p class="role">${m.role}</p>
+        <h3>${m.name}</h3>
+        <p>${m.duty}</p>
+    </div>`).join("");
+
+/* ---------- Footers: presenter and page number ---------- */
+const slides = Array.from(document.querySelectorAll(".slide"));
+const total = String(slides.length).padStart(2, "0");
+
+slides.forEach((slide, i) => {
+    const presenter = slide.querySelector("[data-presenter]");
+    const member = TEAM[Number(slide.dataset.speaker)];
+    if (presenter && member) presenter.textContent = "Presented by " + member.name;
+    slide.querySelector(".page").textContent = String(i + 1).padStart(2, "0") + " / " + total;
+});
+
+/* ---------- Scale the 1280 x 720 stage to fit ---------- */
+const stage = document.getElementById("stage");
+function fit() {
+    stage.style.transform = `scale(${Math.min(innerWidth / 1280, innerHeight / 720)})`;
+}
+addEventListener("resize", fit);
+fit();
+
+/* ---------- Navigation ---------- */
+const progress = document.getElementById("progress");
+let current = 0;
+
+function show(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides.forEach((s, i) => s.classList.toggle("active", i === current));
+    progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+    history.replaceState(null, "", "#" + (current + 1));
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+}
+
+document.getElementById("prevBtn").onclick = () => show(current - 1);
+document.getElementById("nextBtn").onclick = () => show(current + 1);
+document.getElementById("fsBtn").onclick = toggleFullscreen;
+
+addEventListener("keydown", e => {
+    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); show(current + 1); }
+    else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(current - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+    else if (e.key.toLowerCase() === "f") toggleFullscreen();
+});
+
+let touchX = null;
+addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    touchX = null;
+});
+
+/* Controls fade out while presenting, return on mouse move */
+const controls = document.getElementById("controls");
+let hideTimer;
+function wake() {
+    controls.classList.remove("hidden");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => controls.classList.add("hidden"), 2500);
+}
+addEventListener("mousemove", wake);
+wake();
+
+show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "",
+  "buildCommand": "rm -rf frontend/pitch && cp -r PSDA-Pitch-Deck frontend/pitch",
   "outputDirectory": "frontend",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index" }
