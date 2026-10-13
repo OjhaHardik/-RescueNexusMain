@@ -74,10 +74,16 @@ async function sendBroadcast() {
 
     const res = await fetch(url, { method: "POST" });
     const data = await res.json();
-    logBroadcast(incidentId, method, data.alerts_sent);
+    logBroadcast(incidentId, method, data.alerts_sent, data.failed || []);
 }
 
-function logBroadcast(incidentId, method, count) {
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
+function logBroadcast(incidentId, method, count, failed) {
     const logs = document.getElementById("broadcastLogs");
     const card = document.createElement("div");
     const time = new Date().toLocaleString();
@@ -85,6 +91,7 @@ function logBroadcast(incidentId, method, count) {
         <b>Incident ${incidentId}</b><br>
         Method: ${method.toUpperCase()}<br>
         Alerts sent to ${count} nearby users<br>
+        ${failed.length ? `<span style="color:#ef4444;">Failed: ${failed.map(escapeHTML).join("<br>")}</span><br>` : ""}
         <small style="color:#888;">Sent at: ${time}</small>
     `;
     logs.prepend(card);

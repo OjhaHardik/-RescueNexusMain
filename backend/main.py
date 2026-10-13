@@ -23,7 +23,7 @@ from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-from backend.services.mail import send_email
+from backend.services.mail import send_email, email_configured, check_email_login
 from backend.schemas import IncidentResponse, ReportResponse
 from backend.users.routes import router as users_router
 from backend.auth.routes import router as auth_router
@@ -201,7 +201,36 @@ def create_incident(
     db.add(db_report)
     db.commit()
 
+    # -----------------------------------------
+    # CONFIRMATION EMAIL TO REPORTER
+    # -----------------------------------------
+    if user.email:
+        send_email(
+            user.email,
+            f"Hello {user.name},\n\n"
+            f"Your emergency report has been received by RescueNexus.\n\n"
+            f"Incident ID: {db_incident.id}\n"
+            f"Type: {db_incident.type}\n"
+            f"Severity: {db_incident.severity}\n"
+            f"Location: {MAPS_LINK_TEMPLATE.format(lat=db_incident.latitude, lng=db_incident.longitude)}\n\n"
+            f"Our response team has been alerted. You will get another email when a team is dispatched."
+        )
+
     return db_incident
+
+
+# =========================================
+# EMAIL DIAGNOSTICS (no secrets returned)
+# =========================================
+
+@app.get("/health/email")
+def email_health():
+    ok, error = check_email_login()
+    return {
+        "configured": email_configured(),
+        "smtp_login": "ok" if ok else "failed",
+        "error": error
+    }
 
 
 # =========================================
@@ -395,6 +424,7 @@ def broadcast_alert(
 
     users = db.query(User).all()
     notified_users = []
+    failed = []        # delivery errors, so the admin sees why alerts failed
 
     # -----------------------------------------
     # AUTO GENERATE MESSAGE
@@ -424,22 +454,29 @@ def broadcast_alert(
 
         if distance <= radius:
 
-            sent = False  # 👈 track if THIS user got any alert
+            sent = False  # 👈 track if THIS user actually got any alert
 
             if method in ["sms", "all"] and user.phone:
-                send_sms(user.phone, message)
-                sent = True
+                ok, error = send_sms(user.phone, message)
+                if ok:
+                    sent = True
+                else:
+                    failed.append(f"SMS to {user.name}: {error}")
 
             if method in ["email", "all"] and user.email:
-                send_email(user.email, message)
-                sent = True
+                ok, error = send_email(user.email, message)
+                if ok:
+                    sent = True
+                else:
+                    failed.append(f"Email to {user.name}: {error}")
 
             if sent:
                 notified_users.append(user.phone)
 
     return {
         "incident_id": incident.id,
-        "alerts_sent": len(notified_users)
+        "alerts_sent": len(notified_users),
+        "failed": failed
     }
 
 
